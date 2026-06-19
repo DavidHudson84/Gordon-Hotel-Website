@@ -9,156 +9,666 @@
     "facebook": "https://www.facebook.com/gordonhotelgordon/"
   },
   "hero": {
-    "eyebrow": "Gordon \u00b7 Victoria",
+    "eyebrow": "Gordon · Victoria",
     "taglineLead": "A quaint country pub with ",
     "taglineBold": "old-fashioned hospitality",
-    "sub": "Cold beer, hearty counter meals, hot pizza and a drive-through bottle shop \u2014 out on the road between Ballan and Ballarat.",
-    "note": "Takeaway available \u00b7 Lunch & dinner \u00b7 (03) 5368 9203"
+    "sub": "Cold beer, hearty counter meals, hot pizza and a drive-through bottle shop — out on the road between Ballan and Ballarat.",
+    "note": "Takeaway available · Lunch & dinner · (03) 5368 9203"
   },
   "whatsOn": {
     "intro": "There's always a reason to drop in. Here's what's on at the Gordon."
   },
   "menuMeta": {
-    "intro": "Big servings, fair prices, nothing fancy \u2014 just good pub food made the way it should be.",
-    "note": "GF = gluten free \u00b7 V = vegetarian \u00b7 Tap any dish with a photo to see it \u00b7 Prices may change \u2014 call (03) 5368 9203 to confirm or for daily specials."
+    "intro": "Big servings, fair prices, nothing fancy — just good pub food made the way it should be.",
+    "note": "GF = gluten free · V = vegetarian · Tap any dish with a photo to see it · Prices may change — call (03) 5368 9203 to confirm or for daily specials."
   },
   "hoursRows": [
-    { "days": [1, 2], "day": "Mon \u2013 Tue", "lines": ["Bar & Bottle Shop", "4pm \u2013 8pm"] },
-    { "days": [3, 4, 5, 6, 0], "day": "Wed \u2013 Sun", "lines": ["Lunch 12pm \u2013 2:30pm", "Dinner 5pm \u2013 8pm", "Bar till midnight"] }
+    {
+      "days": [
+        1,
+        2
+      ],
+      "day": "Mon – Tue",
+      "lines": [
+        "Bar & Bottle Shop",
+        "4pm – 8pm"
+      ]
+    },
+    {
+      "days": [
+        3,
+        4,
+        5,
+        6,
+        0
+      ],
+      "day": "Wed – Sun",
+      "lines": [
+        "Lunch 12pm – 2:30pm",
+        "Dinner 5pm – 8pm",
+        "Bar till midnight"
+      ]
+    }
   ],
-  "happyHourLine": "$6 pots of tap beer \u00b7 Mon\u2013Fri 4\u20136pm \u00b7 Sat\u2013Sun 3\u20135pm",
+  "happyHourLine": "$6 pots of tap beer · Mon–Fri 4–6pm · Sat–Sun 3–5pm",
   "hoursData": {
-    "0": { "bar": [12, 24], "kitchen": [[12, 14.5], [17, 20]] },
-    "1": { "bar": [16, 20], "kitchen": [] },
-    "2": { "bar": [16, 20], "kitchen": [] },
-    "3": { "bar": [12, 24], "kitchen": [[12, 14.5], [17, 20]] },
-    "4": { "bar": [12, 24], "kitchen": [[12, 14.5], [17, 20]] },
-    "5": { "bar": [12, 24], "kitchen": [[12, 14.5], [17, 20]] },
-    "6": { "bar": [12, 24], "kitchen": [[12, 14.5], [17, 20]] }
+    "0": {
+      "bar": [
+        12,
+        24
+      ],
+      "kitchen": [
+        [
+          12,
+          14.5
+        ],
+        [
+          17,
+          20
+        ]
+      ]
+    },
+    "1": {
+      "bar": [
+        16,
+        20
+      ],
+      "kitchen": []
+    },
+    "2": {
+      "bar": [
+        16,
+        20
+      ],
+      "kitchen": []
+    },
+    "3": {
+      "bar": [
+        12,
+        24
+      ],
+      "kitchen": [
+        [
+          12,
+          14.5
+        ],
+        [
+          17,
+          20
+        ]
+      ]
+    },
+    "4": {
+      "bar": [
+        12,
+        24
+      ],
+      "kitchen": [
+        [
+          12,
+          14.5
+        ],
+        [
+          17,
+          20
+        ]
+      ]
+    },
+    "5": {
+      "bar": [
+        12,
+        24
+      ],
+      "kitchen": [
+        [
+          12,
+          14.5
+        ],
+        [
+          17,
+          20
+        ]
+      ]
+    },
+    "6": {
+      "bar": [
+        12,
+        24
+      ],
+      "kitchen": [
+        [
+          12,
+          14.5
+        ],
+        [
+          17,
+          20
+        ]
+      ]
+    }
   },
   "promos": [
-    { "feature": true, "kicker": "Wednesday Nights", "title": "Parma Night", "when": "Every Wednesday \u00b7 5pm\u20138pm", "price": "$25", "body": "Six cracking parmas \u2014 Mexican, Meatlovers, Tropical, Hot As, Mick's Special & Vegan \u2014 all $25, with a free pot of Gordon draught for every meal.", "img": "dish-meatlovers-parma.jpg", "linkText": "See parma menu \u2192", "linkType": "tab", "linkValue": "panel-parma" },
-    { "kicker": "Lunch Special", "title": "Pot & Parma", "when": "Wed\u2013Sun lunch \u00b7 12pm\u20132:30pm", "price": "$25", "body": "A classic pub favourite for an unbeatable price \u2014 a parma and a pot, sorted.", "img": "dish-chicken-parma.jpg", "linkText": "Book a table \u2192", "linkType": "tel" },
-    { "kicker": "Daily", "title": "Happy Hour", "when": "Mon\u2013Fri 4\u20136pm \u00b7 Sat\u2013Sun 3\u20135pm", "price": "", "body": "$6 pots of tap beer, every single day. Knock off, pull up a stool, and settle in.", "img": "promo-beer.jpg", "linkText": "", "linkType": "none" },
-    { "kicker": "From $15", "title": "Seniors Lunch", "when": "Wed\u2013Sun lunch \u00b7 12pm\u20132:30pm", "price": "$15", "body": "A proper hot lunch at a fair price for our seniors. Available every lunch service, Wednesday to Sunday.", "img": "dish-roast.jpg", "linkText": "", "linkType": "none" },
-    { "kicker": "School Holidays", "title": "Kids Eat Free", "when": "School holidays \u00b7 Lunch & dinner", "price": "", "body": "One free kids meal with every adult main purchased. School holidays only \u2014 kitchen's closed Mondays & Tuesdays. Bookings a good idea. Conditions apply.", "img": "promo-kids.jpg", "linkText": "Book a table \u2192", "linkType": "tel" },
-    { "kicker": "Lunch & Dinner", "title": "Takeaway Available", "when": "Whenever the kitchen's on", "price": "", "body": "The whole menu, packed up to take home. Give us a bell and we'll have it ready.", "img": "dish-meatlovers-pizza.jpg", "linkText": "Order now \u2192", "linkType": "tel" }
+    {
+      "feature": true,
+      "kicker": "Wednesday Nights",
+      "title": "Parma Night",
+      "when": "Every Wednesday · 5pm–8pm",
+      "price": "$25",
+      "body": "Six cracking parmas — Mexican, Meatlovers, Tropical, Hot As, Mick's Special & Vegan — all $25, with a free pot of Gordon draught for every meal.",
+      "img": "dish-meatlovers-parma.jpg",
+      "linkText": "See parma menu →",
+      "linkType": "tab",
+      "linkValue": "panel-parma"
+    },
+    {
+      "kicker": "Lunch Special",
+      "title": "Pot & Parma",
+      "when": "Wed–Sun lunch · 12pm–2:30pm",
+      "price": "$25",
+      "body": "A classic pub favourite for an unbeatable price — a parma and a pot, sorted.",
+      "img": "dish-chicken-parma.jpg",
+      "linkText": "Book a table →",
+      "linkType": "tel"
+    },
+    {
+      "kicker": "Daily",
+      "title": "Happy Hour",
+      "when": "Mon–Fri 4–6pm · Sat–Sun 3–5pm",
+      "price": "",
+      "body": "$6 pots of tap beer, every single day. Knock off, pull up a stool, and settle in.",
+      "img": "promo-beer.jpg",
+      "linkText": "",
+      "linkType": "none"
+    },
+    {
+      "kicker": "From $15",
+      "title": "Seniors Lunch",
+      "when": "Wed–Sun lunch · 12pm–2:30pm",
+      "price": "$15",
+      "body": "A proper hot lunch at a fair price for our seniors. Available every lunch service, Wednesday to Sunday.",
+      "img": "dish-roast.jpg",
+      "linkText": "",
+      "linkType": "none"
+    },
+    {
+      "kicker": "School Holidays",
+      "title": "Kids Eat Free",
+      "when": "School holidays · Lunch & dinner",
+      "price": "",
+      "body": "One free kids meal with every adult main purchased. School holidays only — kitchen's closed Mondays & Tuesdays. Bookings a good idea. Conditions apply.",
+      "img": "promo-kids.jpg",
+      "linkText": "Book a table →",
+      "linkType": "tel"
+    },
+    {
+      "kicker": "Lunch & Dinner",
+      "title": "Takeaway Available",
+      "when": "Whenever the kitchen's on",
+      "price": "",
+      "body": "The whole menu, packed up to take home. Give us a bell and we'll have it ready.",
+      "img": "dish-meatlovers-pizza.jpg",
+      "linkText": "Order now →",
+      "linkType": "tel"
+    }
   ],
   "menu": [
     {
-      "id": "food", "label": "Food",
+      "id": "food",
+      "label": "Food",
       "categories": [
         {
-          "name": "Starters", "note": "",
+          "name": "Starters",
+          "note": "",
           "items": [
-            { "name": "Garlic & Herb Bread", "price": "$8.50", "desc": "Add cheese +$1 \u00b7 Add bacon +$2", "tags": ["V"], "img": "dish-garlic-bread.jpg" },
-            { "name": "Hot Chips with Gravy", "price": "$7", "desc": "", "tags": [], "img": "" },
-            { "name": "Garden Salad", "price": "$5", "desc": "With fetta cheese", "tags": ["V"], "img": "" },
-            { "name": "Salt & Pepper Squid", "price": "Sml $18 \u00b7 Lge $28", "desc": "With chips, salad, tartare & lemon", "tags": [], "img": "" },
-            { "name": "Arancini", "price": "Sml $18 \u00b7 Lge $30", "desc": "Mushroom & basil w/ aioli, chips & salad", "tags": ["V"], "img": "dish-arancini.jpg" },
-            { "name": "Beef Nachos", "price": "Sml $16 \u00b7 Lge $30", "desc": "Guacamole, sour cream, jalape\u00f1os, salsa & melted cheese. Vegetarian option available.", "tags": [], "img": "" }
+            {
+              "name": "Garlic & Herb Bread",
+              "price": "$8.50",
+              "desc": "Add cheese +$1 · Add bacon +$2",
+              "tags": [
+                "V"
+              ],
+              "img": "dish-garlic-bread.jpg"
+            },
+            {
+              "name": "Hot Chips with Gravy",
+              "price": "$7",
+              "desc": "",
+              "tags": [],
+              "img": ""
+            },
+            {
+              "name": "Garden Salad",
+              "price": "$5",
+              "desc": "With fetta cheese",
+              "tags": [
+                "V"
+              ],
+              "img": ""
+            },
+            {
+              "name": "Salt & Pepper Squid",
+              "price": "Sml $18 · Lge $28",
+              "desc": "With chips, salad, tartare & lemon",
+              "tags": [],
+              "img": ""
+            },
+            {
+              "name": "Arancini",
+              "price": "Sml $18 · Lge $30",
+              "desc": "Mushroom & basil w/ aioli, chips & salad",
+              "tags": [
+                "V"
+              ],
+              "img": "dish-arancini.jpg"
+            },
+            {
+              "name": "Beef Nachos",
+              "price": "Sml $16 · Lge $30",
+              "desc": "Guacamole, sour cream, jalapeños, salsa & melted cheese. Vegetarian option available.",
+              "tags": [],
+              "img": ""
+            }
           ]
         },
         {
-          "name": "Burgers", "note": "All burgers served with chips.",
+          "name": "Burgers",
+          "note": "All burgers served with chips.",
           "items": [
-            { "name": "Angus Beef Burger", "price": "$28", "desc": "Lettuce, cheese, tomato, bacon, gherkin, egg, relish & aioli", "tags": [], "img": "dish-angus-beef-burger.jpg" },
-            { "name": "Chicken Schnitzel Burger", "price": "$28", "desc": "Lettuce, cheese, tomato, bacon, relish & aioli", "tags": [], "img": "dish-chicken-schnitzel-burger.jpg" },
-            { "name": "Steak Sandwich", "price": "$28", "desc": "Scotch fillet with lettuce, cheese, tomato, caramelised onion, egg, relish & aioli", "tags": [], "img": "" }
+            {
+              "name": "Angus Beef Burger",
+              "price": "$28",
+              "desc": "Lettuce, cheese, tomato, bacon, gherkin, egg, relish & aioli",
+              "tags": [],
+              "img": "dish-angus-beef-burger.jpg"
+            },
+            {
+              "name": "Chicken Schnitzel Burger",
+              "price": "$28",
+              "desc": "Lettuce, cheese, tomato, bacon, relish & aioli",
+              "tags": [],
+              "img": "dish-chicken-schnitzel-burger.jpg"
+            },
+            {
+              "name": "Steak Sandwich",
+              "price": "$28",
+              "desc": "Scotch fillet with lettuce, cheese, tomato, caramelised onion, egg, relish & aioli",
+              "tags": [],
+              "img": ""
+            }
           ]
         },
         {
-          "name": "Mains", "note": "Steaks, parmas, fish & roast come with your choice of 2 sides \u2014 chips, salad, mash or steamed veg. Sauce & gravy +$2.50 (plain, mushroom, pepper or garlic butter).",
+          "name": "Mains",
+          "note": "Steaks, parmas, fish & roast come with your choice of 2 sides — chips, salad, mash or steamed veg. Sauce & gravy +$2.50 (plain, mushroom, pepper or garlic butter).",
           "items": [
-            { "name": "Chicken Parma", "price": "$28", "desc": "Schnitzel with napoli sauce, ham & melted cheese", "tags": [], "img": "dish-chicken-parma.jpg" },
-            { "name": "Mick's Special Parma", "price": "$30", "desc": "Schnitzel with napoli sauce, crispy bacon, chorizo, chilli & melted cheese", "tags": [], "img": "" },
-            { "name": "Chicken Schnitzel", "price": "$26", "desc": "", "tags": [], "img": "dish-chicken-schnitzel.jpg" },
-            { "name": "Porterhouse 300g", "price": "$36", "desc": "", "tags": ["GF"], "img": "dish-porterhouse.jpg" },
-            { "name": "T-Bone 350g", "price": "$36", "desc": "", "tags": ["GF"], "img": "" },
-            { "name": "House-Made Lasagne", "price": "$26", "desc": "", "tags": [], "img": "dish-lasagne.jpg" },
-            { "name": "Beer-Battered Flathead Tails", "price": "$28", "desc": "With lemon & tartare", "tags": [], "img": "" },
-            { "name": "Grilled Barramundi", "price": "$28", "desc": "With lemon & tartare", "tags": ["GF"], "img": "" },
-            { "name": "Gnocchi", "price": "$24", "desc": "Cream sauce with pumpkin, spinach & parmesan", "tags": ["V"], "img": "" },
-            { "name": "Roast of the Day", "price": "$28", "desc": "With roast potato, pumpkin, vegetables & gravy", "tags": ["GF"], "img": "dish-roast.jpg" },
-            { "name": "Pasta of the Day", "price": "$28", "desc": "", "tags": [], "img": "dish-pasta-of-the-day.jpg" }
+            {
+              "name": "Chicken Parma",
+              "price": "$28",
+              "desc": "Schnitzel with napoli sauce, ham & melted cheese",
+              "tags": [],
+              "img": "dish-chicken-parma.jpg"
+            },
+            {
+              "name": "Mick's Special Parma",
+              "price": "$30",
+              "desc": "Schnitzel with napoli sauce, crispy bacon, chorizo, chilli & melted cheese",
+              "tags": [],
+              "img": ""
+            },
+            {
+              "name": "Chicken Schnitzel",
+              "price": "$26",
+              "desc": "",
+              "tags": [],
+              "img": "dish-chicken-schnitzel.jpg"
+            },
+            {
+              "name": "Porterhouse 300g",
+              "price": "$36",
+              "desc": "",
+              "tags": [
+                "GF"
+              ],
+              "img": "dish-porterhouse.jpg"
+            },
+            {
+              "name": "T-Bone 350g",
+              "price": "$36",
+              "desc": "",
+              "tags": [
+                "GF"
+              ],
+              "img": ""
+            },
+            {
+              "name": "House-Made Lasagne",
+              "price": "$26",
+              "desc": "",
+              "tags": [],
+              "img": "dish-lasagne.jpg"
+            },
+            {
+              "name": "Beer-Battered Flathead Tails",
+              "price": "$28",
+              "desc": "With lemon & tartare",
+              "tags": [],
+              "img": ""
+            },
+            {
+              "name": "Grilled Barramundi",
+              "price": "$28",
+              "desc": "With lemon & tartare",
+              "tags": [
+                "GF"
+              ],
+              "img": ""
+            },
+            {
+              "name": "Gnocchi",
+              "price": "$24",
+              "desc": "Cream sauce with pumpkin, spinach & parmesan",
+              "tags": [
+                "V"
+              ],
+              "img": ""
+            },
+            {
+              "name": "Roast of the Day",
+              "price": "$28",
+              "desc": "With roast potato, pumpkin, vegetables & gravy",
+              "tags": [
+                "GF"
+              ],
+              "img": "dish-roast.jpg"
+            },
+            {
+              "name": "Pasta of the Day",
+              "price": "$28",
+              "desc": "",
+              "tags": [],
+              "img": "dish-pasta-of-the-day.jpg"
+            }
           ]
         }
       ]
     },
     {
-      "id": "pizza", "label": "Pizza",
+      "id": "pizza",
+      "label": "Pizza",
       "categories": [
         {
-          "name": "Pizzas", "note": "Gluten-free base available on request +$6.",
+          "name": "Pizzas",
+          "note": "Gluten-free base available on request +$6.",
           "items": [
-            { "name": "Margherita", "price": "$20", "desc": "Napoli, cheese, fresh herbs", "tags": ["V"], "img": "" },
-            { "name": "Pepperoni", "price": "$24", "desc": "Napoli, cheese, pepperoni", "tags": [], "img": "" },
-            { "name": "Ham & Pineapple", "price": "$24", "desc": "Napoli, cheese, shaved ham, pineapple", "tags": [], "img": "" },
-            { "name": "Capricciosa", "price": "$26", "desc": "Napoli, cheese, shaved ham, mushroom, olives", "tags": [], "img": "" },
-            { "name": "Aussie", "price": "$24", "desc": "Napoli, cheese, shaved ham, bacon, egg", "tags": [], "img": "" },
-            { "name": "Meatlovers", "price": "$28", "desc": "BBQ sauce, cheese, pepperoni, shaved ham, chorizo, bacon", "tags": [], "img": "dish-meatlovers-pizza.jpg" },
-            { "name": "Mexican", "price": "$26", "desc": "Napoli, cheese, pepperoni, capsicum, chilli", "tags": [], "img": "dish-mexican-pizza.jpg" },
-            { "name": "Supreme", "price": "$28", "desc": "Napoli, cheese, pepperoni, shaved ham, chorizo, bacon, pineapple, olives, mushrooms", "tags": [], "img": "" },
-            { "name": "Veggie", "price": "$26", "desc": "Napoli, cheese, olives, pineapple, spinach, mushrooms, capsicum", "tags": ["V"], "img": "" }
+            {
+              "name": "Margherita",
+              "price": "$20",
+              "desc": "Napoli, cheese, fresh herbs",
+              "tags": [
+                "V"
+              ],
+              "img": ""
+            },
+            {
+              "name": "Pepperoni",
+              "price": "$24",
+              "desc": "Napoli, cheese, pepperoni",
+              "tags": [],
+              "img": ""
+            },
+            {
+              "name": "Ham & Pineapple",
+              "price": "$24",
+              "desc": "Napoli, cheese, shaved ham, pineapple",
+              "tags": [],
+              "img": ""
+            },
+            {
+              "name": "Capricciosa",
+              "price": "$26",
+              "desc": "Napoli, cheese, shaved ham, mushroom, olives",
+              "tags": [],
+              "img": ""
+            },
+            {
+              "name": "Aussie",
+              "price": "$24",
+              "desc": "Napoli, cheese, shaved ham, bacon, egg",
+              "tags": [],
+              "img": ""
+            },
+            {
+              "name": "Meatlovers",
+              "price": "$28",
+              "desc": "BBQ sauce, cheese, pepperoni, shaved ham, chorizo, bacon",
+              "tags": [],
+              "img": "dish-meatlovers-pizza.jpg"
+            },
+            {
+              "name": "Mexican",
+              "price": "$26",
+              "desc": "Napoli, cheese, pepperoni, capsicum, chilli",
+              "tags": [],
+              "img": "dish-mexican-pizza.jpg"
+            },
+            {
+              "name": "Supreme",
+              "price": "$28",
+              "desc": "Napoli, cheese, pepperoni, shaved ham, chorizo, bacon, pineapple, olives, mushrooms",
+              "tags": [],
+              "img": ""
+            },
+            {
+              "name": "Veggie",
+              "price": "$26",
+              "desc": "Napoli, cheese, olives, pineapple, spinach, mushrooms, capsicum",
+              "tags": [
+                "V"
+              ],
+              "img": ""
+            }
           ]
         }
       ]
     },
     {
-      "id": "parma", "label": "Parma Night",
-      "intro": "Parma Night \u2014 every Wednesday, 5pm\u20138pm. All parmas $25 and come with a free pot of Gordon draught. Served with your choice of 2 sides: chips, salads, veggies or mash.",
+      "id": "parma",
+      "label": "Parma Night",
+      "intro": "Parma Night — every Wednesday, 5pm–8pm. All parmas $25 and come with a free pot of Gordon draught. Served with your choice of 2 sides: chips, salads, veggies or mash.",
       "categories": [
         {
-          "name": "The Parmas", "note": "",
+          "name": "The Parmas",
+          "note": "",
           "items": [
-            { "name": "Mexican", "price": "$25", "desc": "Salsa, ham, guacamole, jalape\u00f1o, sour cream, corn, chips", "tags": [], "img": "" },
-            { "name": "Meatlovers", "price": "$25", "desc": "BBQ sauce, shaved ham, bacon, hot salami, chorizo, cheese", "tags": [], "img": "dish-meatlovers-parma.jpg" },
-            { "name": "Tropical", "price": "$25", "desc": "Napoli, shaved ham, pineapple, cheese", "tags": [], "img": "" },
-            { "name": "Hot As", "price": "$25", "desc": "Napoli, spicy sambal, hot salami, capsicum, jalape\u00f1o, cheese", "tags": [], "img": "" },
-            { "name": "Mick's Special", "price": "$25", "desc": "Napoli, crispy bacon, chorizo, chilli, cheese", "tags": [], "img": "" },
-            { "name": "Vegan", "price": "$25", "desc": "Vegan schnitzel, napoli, spinach, capsicum, vegan cheese", "tags": ["V"], "img": "" }
+            {
+              "name": "Mexican",
+              "price": "$25",
+              "desc": "Salsa, ham, guacamole, jalapeño, sour cream, corn, chips",
+              "tags": [],
+              "img": ""
+            },
+            {
+              "name": "Meatlovers",
+              "price": "$25",
+              "desc": "BBQ sauce, shaved ham, bacon, hot salami, chorizo, cheese",
+              "tags": [],
+              "img": "dish-meatlovers-parma.jpg"
+            },
+            {
+              "name": "Tropical",
+              "price": "$25",
+              "desc": "Napoli, shaved ham, pineapple, cheese",
+              "tags": [],
+              "img": ""
+            },
+            {
+              "name": "Hot As",
+              "price": "$25",
+              "desc": "Napoli, spicy sambal, hot salami, capsicum, jalapeño, cheese",
+              "tags": [],
+              "img": ""
+            },
+            {
+              "name": "Mick's Special",
+              "price": "$25",
+              "desc": "Napoli, crispy bacon, chorizo, chilli, cheese",
+              "tags": [],
+              "img": ""
+            },
+            {
+              "name": "Vegan",
+              "price": "$25",
+              "desc": "Vegan schnitzel, napoli, spinach, capsicum, vegan cheese",
+              "tags": [
+                "V"
+              ],
+              "img": ""
+            }
           ]
         }
       ]
     },
     {
-      "id": "kids", "label": "Kids & Dessert",
+      "id": "kids",
+      "label": "Kids & Dessert",
       "categories": [
         {
-          "name": "Desserts", "note": "",
+          "name": "Desserts",
+          "note": "",
           "items": [
-            { "name": "Sticky Date Pudding", "price": "$10", "desc": "With vanilla ice cream & butterscotch sauce", "tags": [], "img": "" },
-            { "name": "Self-Saucing Chocolate Pudding", "price": "$10", "desc": "With vanilla ice cream", "tags": ["GF"], "img": "" },
-            { "name": "Ice Cream", "price": "$6", "desc": "Chocolate, caramel or strawberry topping & sprinkles", "tags": [], "img": "" },
-            { "name": "NY-Style Cheesecake", "price": "$12", "desc": "Locally made", "tags": [], "img": "" }
+            {
+              "name": "Sticky Date Pudding",
+              "price": "$10",
+              "desc": "With vanilla ice cream & butterscotch sauce",
+              "tags": [],
+              "img": ""
+            },
+            {
+              "name": "Self-Saucing Chocolate Pudding",
+              "price": "$10",
+              "desc": "With vanilla ice cream",
+              "tags": [
+                "GF"
+              ],
+              "img": ""
+            },
+            {
+              "name": "Ice Cream",
+              "price": "$6",
+              "desc": "Chocolate, caramel or strawberry topping & sprinkles",
+              "tags": [],
+              "img": ""
+            },
+            {
+              "name": "NY-Style Cheesecake",
+              "price": "$12",
+              "desc": "Locally made",
+              "tags": [],
+              "img": ""
+            }
           ]
         },
         {
-          "name": "Kids Menu", "note": "",
+          "name": "Kids Menu",
+          "note": "",
           "items": [
-            { "name": "Chicken Dinos & Chips", "price": "$12", "desc": "", "tags": [], "img": "" },
-            { "name": "Fish & Chips", "price": "$14", "desc": "", "tags": [], "img": "" },
-            { "name": "Kids Pasta", "price": "$12", "desc": "", "tags": [], "img": "" },
-            { "name": "Mini Parma", "price": "$14", "desc": "", "tags": [], "img": "" },
-            { "name": "Kids Lasagne", "price": "$14", "desc": "", "tags": [], "img": "" }
+            {
+              "name": "Chicken Dinos & Chips",
+              "price": "$12",
+              "desc": "",
+              "tags": [],
+              "img": ""
+            },
+            {
+              "name": "Fish & Chips",
+              "price": "$14",
+              "desc": "",
+              "tags": [],
+              "img": ""
+            },
+            {
+              "name": "Kids Pasta",
+              "price": "$12",
+              "desc": "",
+              "tags": [],
+              "img": ""
+            },
+            {
+              "name": "Mini Parma",
+              "price": "$14",
+              "desc": "",
+              "tags": [],
+              "img": ""
+            },
+            {
+              "name": "Kids Lasagne",
+              "price": "$14",
+              "desc": "",
+              "tags": [],
+              "img": ""
+            }
           ]
         }
       ]
     },
     {
-      "id": "drinks", "label": "Cocktails",
-      "intro": "Signature cocktails \u2014 $12 each. Plus a full bar, tap beer and a drive-through bottle shop. Don't forget Happy Hour: $6 pots, Mon\u2013Fri 4\u20136pm and Sat\u2013Sun 3\u20135pm.",
+      "id": "drinks",
+      "label": "Cocktails",
+      "intro": "Signature cocktails — $12 each. Plus a full bar, tap beer and a drive-through bottle shop. Don't forget Happy Hour: $6 pots, Mon–Fri 4–6pm and Sat–Sun 3–5pm.",
       "categories": [
         {
-          "name": "Cocktails", "note": "",
+          "name": "Cocktails",
+          "note": "",
           "items": [
-            { "name": "Jacko's Brake Fluid", "price": "$12", "desc": "\u00bd nip Aliz\u00e9 Bleu, \u00bd nip Midori, filled with Solo", "tags": [], "img": "" },
-            { "name": "Dr Pepper", "price": "$12", "desc": "1 nip Disaronno, filled with Corona", "tags": [], "img": "" },
-            { "name": "The Dark Knight", "price": "$12", "desc": "1 nip black sambuca, filled with lemonade", "tags": [], "img": "" },
-            { "name": "The Gordon Hotel VCR", "price": "$12", "desc": "1 nip vodka, raspberry, filled with Coca-Cola", "tags": [], "img": "" },
-            { "name": "Sunset Sipper", "price": "$12", "desc": "1 nip Aliz\u00e9 Red, 1 nip vodka, filled with soda water", "tags": [], "img": "" },
-            { "name": "Benny's Blue Juice", "price": "$12", "desc": "2 nips Aliz\u00e9 Bleu on ice", "tags": [], "img": "" },
-            { "name": "The Incredible Hulk", "price": "$12", "desc": "\u00bd nip vanilla Galliano, \u00bd nip Midori, filled with Hard Rated", "tags": [], "img": "" }
+            {
+              "name": "Jacko's Brake Fluid",
+              "price": "$12",
+              "desc": "½ nip Alizé Bleu, ½ nip Midori, filled with Solo",
+              "tags": [],
+              "img": ""
+            },
+            {
+              "name": "Dr Pepper",
+              "price": "$12",
+              "desc": "1 nip Disaronno, filled with Corona",
+              "tags": [],
+              "img": ""
+            },
+            {
+              "name": "The Dark Knight",
+              "price": "$12",
+              "desc": "1 nip black sambuca, filled with lemonade",
+              "tags": [],
+              "img": ""
+            },
+            {
+              "name": "The Gordon Hotel VCR",
+              "price": "$12",
+              "desc": "1 nip vodka, raspberry, filled with Coca-Cola",
+              "tags": [],
+              "img": ""
+            },
+            {
+              "name": "Sunset Sipper",
+              "price": "$12",
+              "desc": "1 nip Alizé Red, 1 nip vodka, filled with soda water",
+              "tags": [],
+              "img": ""
+            },
+            {
+              "name": "Benny's Blue Juice",
+              "price": "$12",
+              "desc": "2 nips Alizé Bleu on ice",
+              "tags": [],
+              "img": ""
+            },
+            {
+              "name": "The Incredible Hulk",
+              "price": "$12",
+              "desc": "½ nip vanilla Galliano, ½ nip Midori, filled with Hard Rated",
+              "tags": [],
+              "img": ""
+            }
           ]
         }
       ]

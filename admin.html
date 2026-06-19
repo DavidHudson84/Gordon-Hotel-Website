@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Gordon Hotel — Site Editor</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230A0908'/%3E%3Ctext x='32' y='46' font-family='Arial' font-size='34' font-weight='700' text-anchor='middle' fill='%23D4AC52'%3EG%3C/text%3E%3C/svg%3E">
+<style>
+  :root{--bg:#0d0c0b;--bg2:#16140f;--bg3:#1e1b14;--gold:#C9A24C;--goldb:#E4C36A;--text:#ECE6D8;--muted:#9a917f;--line:rgba(201,162,76,.22);--lineS:rgba(201,162,76,.4);--ok:#7BD17F;--err:#E08B6A;}
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--text);font-family:'Saira',system-ui,-apple-system,sans-serif;line-height:1.5;}
+  a{color:var(--goldb);}
+  h1,h2,h3{margin:0;font-weight:600;}
+  .top{position:sticky;top:0;z-index:10;display:flex;align-items:center;gap:14px;padding:12px 20px;background:rgba(13,12,11,.96);border-bottom:1px solid var(--line);backdrop-filter:blur(6px);}
+  .top .title{font-weight:700;letter-spacing:.04em;color:var(--gold);text-transform:uppercase;font-size:.95rem;}
+  .top .dirty{font-size:.78rem;color:var(--muted);}
+  .top .dirty.unsaved{color:var(--goldb);}
+  .spacer{flex:1;}
+  .btn{font-family:inherit;font-weight:600;font-size:.82rem;letter-spacing:.03em;text-transform:uppercase;border-radius:4px;border:1.5px solid transparent;padding:.65em 1.1em;cursor:pointer;transition:.15s;}
+  .btn-gold{background:var(--gold);color:#0d0c0b;}
+  .btn-gold:hover{background:var(--goldb);}
+  .btn-gold:disabled{opacity:.5;cursor:default;}
+  .btn-ghost{background:transparent;color:var(--gold);border-color:var(--lineS);}
+  .btn-ghost:hover{background:rgba(201,162,76,.08);color:var(--goldb);}
+  .btn-sm{padding:.4em .7em;font-size:.72rem;}
+  .btn-danger{color:var(--err);border-color:rgba(224,139,106,.4);}
+  .btn-danger:hover{background:rgba(224,139,106,.1);}
+  .wrap{max-width:1000px;margin:0 auto;padding:22px 20px 90px;}
+  .nav{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:24px;}
+  .nav button{font-family:inherit;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:.78rem;color:var(--muted);background:transparent;border:1px solid var(--line);border-radius:999px;padding:.55em 1.1em;cursor:pointer;}
+  .nav button.active{background:var(--gold);color:#0d0c0b;border-color:var(--gold);}
+  .card{background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:20px;margin-bottom:16px;}
+  .card h3{color:var(--goldb);font-size:1rem;margin-bottom:4px;}
+  .card .hint{color:var(--muted);font-size:.82rem;margin:0 0 14px;}
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  @media(max-width:640px){.grid2{grid-template-columns:1fr;}}
+  label.field{display:block;margin-bottom:12px;}
+  label.field>span{display:block;font-size:.72rem;text-transform:uppercase;letter-spacing:.1em;color:var(--gold);margin-bottom:5px;font-weight:600;}
+  input[type=text],input[type=time],input[type=password],textarea,select{width:100%;font-family:inherit;font-size:.92rem;color:var(--text);background:var(--bg3);border:1px solid var(--line);border-radius:6px;padding:.6em .7em;}
+  input:focus,textarea:focus,select:focus{outline:none;border-color:var(--gold);}
+  textarea{resize:vertical;min-height:60px;}
+  .row-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center;}
+  .pill{display:inline-flex;align-items:center;gap:6px;font-size:.82rem;color:var(--muted);}
+  .pill input{width:auto;}
+  .block{border:1px solid var(--line);border-radius:9px;padding:16px;margin-bottom:14px;background:var(--bg3);}
+  .block-head{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
+  .block-head .bt{font-weight:700;color:var(--goldb);flex:1;font-size:.95rem;min-width:120px;}
+  .thumb{width:46px;height:46px;border-radius:6px;object-fit:cover;border:1px solid var(--lineS);background:var(--bg);}
+  .img-row{display:flex;align-items:center;gap:10px;}
+  .img-row input[type=text]{flex:1;}
+  .muted{color:var(--muted);}
+  .log{font-family:ui-monospace,Menlo,monospace;font-size:.8rem;background:#000;border:1px solid var(--line);border-radius:8px;padding:12px;max-height:220px;overflow:auto;white-space:pre-wrap;color:#cde6cd;}
+  .warn{background:rgba(224,139,106,.08);border:1px solid rgba(224,139,106,.35);border-radius:8px;padding:12px;font-size:.85rem;color:#f0cdbd;margin-bottom:14px;}
+  .ok{color:var(--ok);} .er{color:var(--err);}
+  .addbar{margin-top:8px;}
+  ol{margin:.4em 0 0;padding-left:1.2em;} ol li{margin-bottom:.4em;}
+</style>
+</head>
+<body>
+<div class="top">
+  <span class="title">Gordon Hotel &middot; Editor</span>
+  <span class="dirty" id="dirty">loading&hellip;</span>
+  <span class="spacer"></span>
+  <button class="btn btn-ghost" id="btnPreview">Preview</button>
+  <button class="btn btn-gold" id="btnPublishTop">Publish</button>
+</div>
+<div class="wrap">
+  <div class="nav" id="nav"></div>
+  <div id="panel"></div>
+</div>
+
+<script src="site-generate.js"></script>
+<script>
+(function(){
+  "use strict";
+  var DRAFT_KEY="gordon_admin_draft_v1";
+  var SET_KEY="gordon_admin_settings_v1";
+  var state={data:null,dirty:false,section:"contact"};
+  function $(id){return document.getElementById(id);}
+
+  function el(tag,attrs,kids){
+    var e=document.createElement(tag);
+    if(attrs)for(var k in attrs){
+      var v=attrs[k];
+      if(v==null)continue;
+      if(k==="class")e.className=v;
+      else if(k==="html")e.innerHTML=v;
+      else if(k.slice(0,2)==="on"&&typeof v==="function")e.addEventListener(k.slice(2),v);
+      else if(k==="value")e.value=v;
+      else if(k==="checked")e.checked=!!v;
+      else e.setAttribute(k,v);
+    }
+    if(kids!=null){(Array.isArray(kids)?kids:[kids]).forEach(function(c){if(c==null||c===false)return;e.appendChild(typeof c==="string"?document.createTextNode(c):c);});}
+    return e;
+  }
+  function field(labelText,obj,key,opts){
+    opts=opts||{};
+    var input=opts.area?el("textarea",{rows:opts.rows||2}):el("input",{type:opts.type||"text"});
+    input.value=obj[key]==null?"":obj[key];
+    if(opts.placeholder)input.setAttribute("placeholder",opts.placeholder);
+    input.addEventListener("input",function(){obj[key]=input.value;markDirty();});
+    return el("label",{class:"field"},[el("span",null,labelText),input]);
+  }
+  function settingField(labelText,obj,key){
+    var input=el("input",{type:"text",value:obj[key]||""});
+    input.addEventListener("input",function(){obj[key]=input.value.trim();saveSettings();});
+    return el("label",{class:"field"},[el("span",null,labelText),input]);
+  }
+  function selectField(labelText,obj,key,options,onchange){
+    var sel=el("select");
+    options.forEach(function(o){var op=el("option",{value:o.value},o.label);if((obj[key]||"")===o.value)op.selected=true;sel.appendChild(op);});
+    sel.addEventListener("change",function(){obj[key]=sel.value;markDirty();if(onchange)onchange();});
+    return el("label",{class:"field"},[el("span",null,labelText),sel]);
+  }
+  function checkbox(labelText,obj,key){
+    var cb=el("input",{type:"checkbox",checked:!!obj[key]});
+    cb.addEventListener("change",function(){obj[key]=cb.checked;markDirty();});
+    return el("label",{class:"pill"},[cb,labelText]);
+  }
+
+  var saveTimer=null;
+  function markDirty(){
+    state.dirty=true;
+    var d=$("dirty");d.textContent="unsaved \u2014 auto-saved in this browser";d.className="dirty unsaved";
+    clearTimeout(saveTimer);
+    saveTimer=setTimeout(function(){try{localStorage.setItem(DRAFT_KEY,JSON.stringify(state.data));}catch(e){}},500);
+  }
+  function markClean(msg){state.dirty=false;var d=$("dirty");d.textContent=msg||"up to date";d.className="dirty";}
+
+  function move(arr,i,dir){var j=i+dir;if(j<0||j>=arr.length)return;var t=arr[i];arr[i]=arr[j];arr[j]=t;markDirty();render();}
+  function slug(s){return String(s||"photo").toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-+|-+$/g,"")||"photo";}
+
+  /* ---------- image handling ---------- */
+  function resizeImage(file){
+    return new Promise(function(res,rej){
+      var img=new Image();var url=URL.createObjectURL(file);
+      img.onload=function(){
+        var max=1100,w=img.naturalWidth,h=img.naturalHeight;
+        if(Math.max(w,h)>max){var s=max/Math.max(w,h);w=Math.round(w*s);h=Math.round(h*s);}
+        var cv=el("canvas");cv.width=w;cv.height=h;cv.getContext("2d").drawImage(img,0,0,w,h);
+        cv.toBlob(function(b){URL.revokeObjectURL(url);if(b)res(b);else rej(new Error("could not process image"));},"image/jpeg",0.82);
+      };
+      img.onerror=function(){URL.revokeObjectURL(url);rej(new Error("not a valid image"));};
+      img.src=url;
+    });
+  }
+  function blobToBase64(blob){return new Promise(function(res,rej){var r=new FileReader();r.onload=function(){res(String(r.result).split(",")[1]);};r.onerror=rej;r.readAsDataURL(blob);});}
+  function handleImage(obj,kind,file,done){
+    if(!file)return;
+    var name=(kind==="promo"?"promo-":"dish-")+slug(obj.title||obj.name||"photo")+".jpg";
+    resizeImage(file).then(function(blob){
+      if(getToken()){
+        log("Uploading "+name+" \u2026");
+        blobToBase64(blob).then(function(b64s){
+          return putFile(name,b64s,"Add photo "+name);
+        }).then(function(){log("Uploaded "+name,"ok");done(name);}).catch(function(e){log("Upload failed: "+e.message,"er");alert("Upload failed: "+e.message);});
+      }else{
+        var url=URL.createObjectURL(blob);var a=el("a",{href:url,download:name});document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url);},1500);
+        done(name);
+        alert("Saved "+name+" to your downloads.\n\nAdd a GitHub token (Publish tab) to upload photos automatically, or upload this file to your repo yourself.");
+      }
+    }).catch(function(e){alert(e.message);});
+  }
+  function imageRow(obj,kind){
+    var prev=el("img",{class:"thumb",alt:"",src:obj.img||""});
+    prev.addEventListener("error",function(){prev.style.visibility="hidden";});
+    var fn=el("input",{type:"text",value:obj.img||"",placeholder:"e.g. dish-name.jpg"});
+    fn.addEventListener("input",function(){obj.img=fn.value;markDirty();prev.src=obj.img;prev.style.visibility="";});
+    var file=el("input",{type:"file",accept:"image/*"});file.style.display="none";
+    file.addEventListener("change",function(){if(file.files[0])handleImage(obj,kind,file.files[0],function(name){obj.img=name;fn.value=name;prev.src=name;prev.style.visibility="";markDirty();});file.value="";});
+    var btn=el("button",{class:"btn btn-ghost btn-sm",onclick:function(){file.click();}},"Upload / replace photo");
+    return el("label",{class:"field"},[el("span",null,"Photo"),el("div",{class:"img-row"},[prev,fn,btn,file])]);
+  }
+
+  /* ---------- sections ---------- */
+  var SECTIONS=[["contact","Business & text"],["specials","Specials"],["menu","Menu"],["hours","Hours"],["publish","Publish"]];
+  function renderNav(){
+    var nav=$("nav");nav.innerHTML="";
+    SECTIONS.forEach(function(s){nav.appendChild(el("button",{class:state.section===s[0]?"active":"",onclick:function(){state.section=s[0];render();}},s[1]));});
+  }
+  function render(){
+    renderNav();
+    var p=$("panel");p.innerHTML="";
+    if(!state.data){p.appendChild(noDataCard());return;}
+    ({contact:renderContact,specials:renderSpecials,menu:renderMenu,hours:renderHours,publish:renderPublish}[state.section]||renderContact)(p);
+  }
+  function noDataCard(){
+    var inp=el("input",{type:"file",accept:".json,application/json"});
+    inp.addEventListener("change",function(){var f=inp.files[0];if(!f)return;var r=new FileReader();r.onload=function(){try{state.data=JSON.parse(r.result);render();markClean("loaded from file");}catch(e){alert("That is not a valid content.json file.");}};r.readAsText(f);});
+    return el("div",{class:"card"},[el("h3",null,"No content loaded"),el("p",{class:"hint"},"Could not read content.json automatically (this happens if you open the file straight off your computer). Load it manually:"),inp]);
+  }
+
+  function renderContact(p){
+    var d=state.data,c=d.contact,h=d.hero;
+    p.appendChild(el("div",{class:"card"},[el("h3",null,"Business details"),el("p",{class:"hint"},"Phone, email and address, used everywhere on the site."),
+      el("div",{class:"grid2"},[
+        field("Business name",c,"name"),field("Phone (shown)",c,"telDisplay"),
+        field("Phone to dial (digits, e.g. +61353689203)",c,"telHref"),field("Email",c,"email"),
+        field("Address (full)",c,"address"),field("Address (short, footer)",c,"addressShort"),
+        field("Facebook URL",c,"facebook")
+      ])]));
+    p.appendChild(el("div",{class:"card"},[el("h3",null,"Front page text"),
+      el("div",{class:"grid2"},[field("Eyebrow (line above logo)",h,"eyebrow"),field("Hero note (under buttons)",h,"note"),
+        field("Tagline \u2014 start",h,"taglineLead"),field("Tagline \u2014 bold bit",h,"taglineBold")]),
+      field("Intro sentence (under the logo)",h,"sub",{area:true})]));
+    p.appendChild(el("div",{class:"card"},[el("h3",null,"Section intros"),
+      field("\u2018What\u2019s On\u2019 intro",d.whatsOn,"intro",{area:true}),
+      field("Menu intro",d.menuMeta,"intro",{area:true}),
+      field("Menu small-print note",d.menuMeta,"note",{area:true}),
+      field("Happy Hour line",d,"happyHourLine")]));
+  }
+
+  function renderSpecials(p){
+    var d=state.data;
+    var card=el("div",{class:"card"},[el("h3",null,"Specials & pub nights"),el("p",{class:"hint"},"The tiles in the \u2018What\u2019s On\u2019 section. Use \u2191 \u2193 to reorder.")]);
+    d.promos.forEach(function(pr,i){card.appendChild(promoBlock(pr,i));});
+    card.appendChild(el("div",{class:"addbar"},[el("button",{class:"btn btn-ghost btn-sm",onclick:function(){d.promos.push({kicker:"New",title:"New special",when:"",price:"",body:"",img:"",linkText:"",linkType:"none",feature:false});markDirty();render();}},"+ Add special")]));
+    p.appendChild(card);
+  }
+  function promoBlock(pr,i){
+    var d=state.data;
+    var linkWrap=el("div");
+    function refreshLink(){linkWrap.innerHTML="";if(pr.linkType==="tab")linkWrap.appendChild(field("Menu tab to open (panel-food, panel-pizza, panel-parma, panel-kids, panel-drinks)",pr,"linkValue"));}
+    var head=el("div",{class:"block-head"},[
+      el("span",{class:"bt"},"#"+(i+1)+"  "+(pr.title||"(untitled)")),
+      el("button",{class:"btn btn-ghost btn-sm",onclick:function(){move(d.promos,i,-1);}},"\u2191"),
+      el("button",{class:"btn btn-ghost btn-sm",onclick:function(){move(d.promos,i,1);}},"\u2193"),
+      el("button",{class:"btn btn-danger btn-sm",onclick:function(){if(confirm("Delete this special?")){d.promos.splice(i,1);markDirty();render();}}},"Delete")
+    ]);
+    var grid=el("div",{class:"grid2"},[
+      field("Kicker (tiny label)",pr,"kicker"),field("Title",pr,"title"),
+      field("When",pr,"when"),field("Price badge (optional)",pr,"price"),
+      field("Button text (optional)",pr,"linkText"),
+      selectField("Button action",pr,"linkType",[{value:"none",label:"No button"},{value:"tel",label:"Call the pub"},{value:"tab",label:"Open a menu tab"}],refreshLink)
+    ]);
+    refreshLink();
+    return el("div",{class:"block"},[head,grid,linkWrap,field("Description",pr,"body",{area:true}),imageRow(pr,"promo"),el("div",null,[checkbox("Feature tile (highlighted)",pr,"feature")])]);
+  }
+
+  function renderMenu(p){
+    var d=state.data;
+    p.appendChild(el("p",{class:"hint",style:"margin-top:-6px"},"Your menu is grouped into Tabs \u2192 Sections \u2192 Items. Add a photo to any item to give it a tap-to-enlarge thumbnail."));
+    d.menu.forEach(function(tab,ti){
+      var card=el("div",{class:"card"});
+      card.appendChild(el("div",{class:"block-head"},[
+        el("span",{class:"bt"},"TAB: "+(tab.label||tab.id)),
+        el("button",{class:"btn btn-ghost btn-sm",onclick:function(){move(d.menu,ti,-1);}},"\u2191"),
+        el("button",{class:"btn btn-ghost btn-sm",onclick:function(){move(d.menu,ti,1);}},"\u2193")
+      ]));
+      card.appendChild(el("div",{class:"grid2"},[field("Tab label",tab,"label"),field("Tab id (lowercase, no spaces)",tab,"id")]));
+      card.appendChild(field("Tab intro (optional highlighted note)",tab,"intro",{area:true}));
+      (tab.categories||[]).forEach(function(cat,ci){card.appendChild(categoryBlock(tab,cat,ci));});
+      card.appendChild(el("div",{class:"addbar"},[el("button",{class:"btn btn-ghost btn-sm",onclick:function(){tab.categories.push({name:"New section",note:"",items:[]});markDirty();render();}},"+ Add section")]));
+      p.appendChild(card);
+    });
+  }
+  function categoryBlock(tab,cat,ci){
+    var b=el("div",{class:"block"});
+    b.appendChild(el("div",{class:"block-head"},[
+      el("span",{class:"bt"},"Section: "+(cat.name||"")),
+      el("button",{class:"btn btn-ghost btn-sm",onclick:function(){move(tab.categories,ci,-1);}},"\u2191"),
+      el("button",{class:"btn btn-ghost btn-sm",onclick:function(){move(tab.categories,ci,1);}},"\u2193"),
+      el("button",{class:"btn btn-danger btn-sm",onclick:function(){if(confirm("Delete this whole section and its items?")){tab.categories.splice(ci,1);markDirty();render();}}},"Delete")
+    ]));
+    b.appendChild(el("div",{class:"grid2"},[field("Section name",cat,"name"),field("Section note (optional)",cat,"note")]));
+    (cat.items||[]).forEach(function(it,ii){b.appendChild(itemBlock(cat,it,ii));});
+    b.appendChild(el("div",{class:"addbar"},[el("button",{class:"btn btn-ghost btn-sm",onclick:function(){cat.items.push({name:"New item",price:"",desc:"",tags:[],img:""});markDirty();render();}},"+ Add item")]));
+    return b;
+  }
+  function tagCheckbox(it,tag,label){
+    it.tags=it.tags||[];
+    var cb=el("input",{type:"checkbox",checked:it.tags.indexOf(tag)!==-1});
+    cb.addEventListener("change",function(){var i=it.tags.indexOf(tag);if(cb.checked&&i===-1)it.tags.push(tag);else if(!cb.checked&&i!==-1)it.tags.splice(i,1);markDirty();});
+    return el("label",{class:"pill"},[cb,label]);
+  }
+  function itemBlock(cat,it,ii){
+    var b=el("div",{class:"block",style:"background:#161309"});
+    b.appendChild(el("div",{class:"block-head"},[
+      el("span",{class:"bt"},it.name||"(item)"),
+      el("button",{class:"btn btn-ghost btn-sm",onclick:function(){move(cat.items,ii,-1);}},"\u2191"),
+      el("button",{class:"btn btn-ghost btn-sm",onclick:function(){move(cat.items,ii,1);}},"\u2193"),
+      el("button",{class:"btn btn-danger btn-sm",onclick:function(){if(confirm("Delete this item?")){cat.items.splice(ii,1);markDirty();render();}}},"Delete")
+    ]));
+    b.appendChild(el("div",{class:"grid2"},[field("Name",it,"name"),field("Price",it,"price")]));
+    b.appendChild(field("Description (optional)",it,"desc",{area:true}));
+    b.appendChild(el("label",{class:"field"},[el("span",null,"Tags"),el("div",{class:"row-tools"},[tagCheckbox(it,"V","Vegetarian (V)"),tagCheckbox(it,"GF","Gluten free (GF)")])]));
+    b.appendChild(imageRow(it,"dish"));
+    return b;
+  }
+
+  /* ---------- hours ---------- */
+  function decToTime(v){if(v==null||v==="")return"";var h=Math.floor(v),m=Math.round((v-h)*60);if(h>=24)h=0;return (h<10?"0"+h:h)+":"+(m<10?"0"+m:m);}
+  function timeToDec(str,isClose){if(!str)return null;var pa=str.split(":");var h=parseInt(pa[0],10),m=parseInt(pa[1],10)||0;if(isNaN(h))return null;var v=h+m/60;if(isClose&&v===0)v=24;return v;}
+  function dayCheckboxes(r){
+    r.days=r.days||[];
+    var defs=[["Mon",1],["Tue",2],["Wed",3],["Thu",4],["Fri",5],["Sat",6],["Sun",0]];
+    var row=el("div",{class:"row-tools"});
+    defs.forEach(function(d){
+      var cb=el("input",{type:"checkbox",checked:r.days.indexOf(d[1])!==-1});
+      cb.addEventListener("change",function(){var i=r.days.indexOf(d[1]);if(cb.checked&&i===-1)r.days.push(d[1]);else if(!cb.checked&&i!==-1)r.days.splice(i,1);markDirty();});
+      row.appendChild(el("label",{class:"pill"},[cb,d[0]]));
+    });
+    return el("label",{class:"field"},[el("span",null,"Applies to (for \u2018Today\u2019 highlight)"),row]);
+  }
+  function renderHours(p){
+    var d=state.data;
+    var c1=el("div",{class:"card"},[el("h3",null,"Hours shown to visitors"),el("p",{class:"hint"},"The rows people see in the Hours section. One time per line.")]);
+    d.hoursRows.forEach(function(r,i){
+      var ta=el("textarea",{rows:3});ta.value=(r.lines||[]).join("\n");
+      ta.addEventListener("input",function(){r.lines=ta.value.split("\n").map(function(s){return s.trim();}).filter(function(s){return s.length;});markDirty();});
+      c1.appendChild(el("div",{class:"block"},[
+        el("div",{class:"block-head"},[el("span",{class:"bt"},r.day||"Row"),
+          el("button",{class:"btn btn-ghost btn-sm",onclick:function(){move(d.hoursRows,i,-1);}},"\u2191"),
+          el("button",{class:"btn btn-ghost btn-sm",onclick:function(){move(d.hoursRows,i,1);}},"\u2193"),
+          el("button",{class:"btn btn-danger btn-sm",onclick:function(){if(confirm("Delete this row?")){d.hoursRows.splice(i,1);markDirty();render();}}},"Delete")]),
+        el("div",{class:"grid2"},[field("Label (e.g. Mon \u2013 Tue)",r,"day"),dayCheckboxes(r)]),
+        el("label",{class:"field"},[el("span",null,"Times (one per line)"),ta])
+      ]));
+    });
+    c1.appendChild(el("div",{class:"addbar"},[el("button",{class:"btn btn-ghost btn-sm",onclick:function(){d.hoursRows.push({days:[],day:"New",lines:[]});markDirty();render();}},"+ Add row")]));
+    p.appendChild(c1);
+
+    var DAYS=["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+    var c2=el("div",{class:"card"},[el("h3",null,"\u2018Open now\u2019 badge schedule"),el("p",{class:"hint"},"Drives the live Open/Closed badge. Set bar hours per day, plus kitchen times if food is served. Leave both bar times blank for a closed day. Use 00:00 as a closing time to mean midnight.")]);
+    for(var di=0;di<7;di++){(function(dayIndex){
+      var hd=d.hoursData[String(dayIndex)]||{};var bar=hd.bar||[];var k=hd.kitchen||[];var lunch=k[0]||[];var dinner=k[1]||[];
+      var s={bo:decToTime(bar[0]),bc:decToTime(bar[1]),lf:decToTime(lunch[0]),lt:decToTime(lunch[1]),df:decToTime(dinner[0]),dt:decToTime(dinner[1])};
+      function rebuild(){
+        var o={};var bo=timeToDec(s.bo,false),bc=timeToDec(s.bc,true);
+        o.bar=(bo!=null&&bc!=null)?[bo,bc]:null;
+        var kit=[];var lf=timeToDec(s.lf,false),lt=timeToDec(s.lt,true);if(lf!=null&&lt!=null)kit.push([lf,lt]);
+        var df=timeToDec(s.df,false),dt=timeToDec(s.dt,true);if(df!=null&&dt!=null)kit.push([df,dt]);
+        o.kitchen=kit;d.hoursData[String(dayIndex)]=o;markDirty();
+      }
+      function t(label,key){var inp=el("input",{type:"time",value:s[key]});inp.addEventListener("input",function(){s[key]=inp.value;rebuild();});return el("label",{class:"field"},[el("span",null,label),inp]);}
+      c2.appendChild(el("div",{class:"block"},[
+        el("div",{class:"block-head"},[el("span",{class:"bt"},DAYS[dayIndex])]),
+        el("div",{class:"grid2"},[t("Bar opens","bo"),t("Bar closes","bc")]),
+        el("div",{class:"grid2"},[t("Lunch from","lf"),t("Lunch to","lt"),t("Dinner from","df"),t("Dinner to","dt")])
+      ]));
+    })(di);}
+    p.appendChild(c2);
+  }
+
+  /* ---------- publish / github ---------- */
+  var settings={owner:"va-ward",repo:"Gordon-Hotel-Website",branch:"main"};
+  function loadSettings(){try{var s=JSON.parse(localStorage.getItem(SET_KEY));if(s){settings.owner=s.owner||settings.owner;settings.repo=s.repo||settings.repo;settings.branch=s.branch||settings.branch;}}catch(e){}}
+  function saveSettings(){localStorage.setItem(SET_KEY,JSON.stringify({owner:settings.owner,repo:settings.repo,branch:settings.branch}));}
+  function getToken(){return sessionStorage.getItem("gh_token")||localStorage.getItem("gh_token")||"";}
+  function setToken(t,remember){if(!t){clearToken();return;}if(remember){localStorage.setItem("gh_token",t);sessionStorage.removeItem("gh_token");}else{sessionStorage.setItem("gh_token",t);localStorage.removeItem("gh_token");}}
+  function clearToken(){sessionStorage.removeItem("gh_token");localStorage.removeItem("gh_token");}
+  function authHeaders(){return {"Authorization":"Bearer "+getToken(),"Accept":"application/vnd.github+json","X-GitHub-Api-Version":"2022-11-28"};}
+  function ghBase(){return "https://api.github.com/repos/"+settings.owner+"/"+settings.repo+"/contents/";}
+  function getSha(path){
+    return fetch(ghBase()+encodeURIComponent(path)+"?ref="+encodeURIComponent(settings.branch),{headers:authHeaders()}).then(function(r){
+      if(r.status===200)return r.json().then(function(j){return j.sha;});
+      if(r.status===404)return null;
+      return r.text().then(function(t){throw new Error("read "+path+" ("+r.status+"). "+shortErr(t));});
+    });
+  }
+  function putFile(path,contentB64,message){
+    return getSha(path).then(function(sha){
+      var body={message:message,content:contentB64,branch:settings.branch};if(sha)body.sha=sha;
+      return fetch(ghBase()+encodeURIComponent(path),{method:"PUT",headers:authHeaders(),body:JSON.stringify(body)}).then(function(r){
+        if(!r.ok)return r.text().then(function(t){throw new Error("save "+path+" ("+r.status+"). "+shortErr(t));});
+        return r.json();
+      });
+    });
+  }
+  function shortErr(t){try{var j=JSON.parse(t);return j.message||t;}catch(e){return (t||"").slice(0,160);}}
+  function b64(str){return btoa(unescape(encodeURIComponent(str)));}
+
+  var logLines=[];
+  function log(msg,cls){logLines.push({t:new Date().toLocaleTimeString(),msg:msg,cls:cls||""});var box=$("log");if(box)renderLog(box);}
+  function renderLog(box){box.innerHTML="";logLines.slice(-60).forEach(function(l){box.appendChild(el("div",{class:l.cls},"["+l.t+"] "+l.msg));});box.scrollTop=box.scrollHeight;}
+  function setBusy(b){["btnPublish","btnPublishTop"].forEach(function(id){var x=$(id);if(x)x.disabled=b;});}
+
+  function generate(){return SiteGen.buildIndexHtml(state.data);}
+  function preview(){
+    if(!state.data){alert("Nothing to preview yet.");return;}
+    var html;try{html=generate();}catch(e){alert("Preview error: "+e.message);return;}
+    var base=location.href.substring(0,location.href.lastIndexOf("/")+1);
+    html=html.replace("<head>","<head>\n<base href=\""+base+"\">");
+    var w=window.open("","_blank");
+    if(!w){alert("Your browser blocked the preview pop-up. Allow pop-ups for this page.");return;}
+    w.document.open();w.document.write(html);w.document.close();
+  }
+  function download(name,text,mime){var blob=new Blob([text],{type:mime||"text/plain"});var url=URL.createObjectURL(blob);var a=el("a",{href:url,download:name});document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(url);},1500);}
+  function publish(){
+    if(!state.data)return;
+    if(!getToken()){alert("Add your GitHub token below first (or use the Download buttons and upload the files yourself).");state.section="publish";render();return;}
+    if(!confirm("Publish your changes to the live website now?"))return;
+    setBusy(true);log("Generating site\u2026");
+    var html;try{html=generate();}catch(e){log("Generate error: "+e.message,"er");setBusy(false);return;}
+    putFile("content.json",b64(JSON.stringify(state.data,null,2)),"Update content (admin)")
+      .then(function(){log("Saved content.json","ok");return putFile("index.html",b64(html),"Rebuild site (admin)");})
+      .then(function(){log("Saved index.html","ok");log("Published! The live site updates in about a minute.","ok");try{localStorage.removeItem(DRAFT_KEY);}catch(e){}markClean("published \u2713");setBusy(false);})
+      .catch(function(e){log("Publish failed: "+e.message,"er");alert("Publish failed:\n\n"+e.message);setBusy(false);});
+  }
+  function reloadPublished(){if(!confirm("Discard your local draft and reload the last published content?"))return;try{localStorage.removeItem(DRAFT_KEY);}catch(e){}loadContent(true);}
+
+  var HELP_HTML=
+    "<ol>"+
+    "<li>On GitHub, click your photo (top right) \u2192 <b>Settings</b>.</li>"+
+    "<li>Scroll down to <b>Developer settings</b> \u2192 <b>Personal access tokens</b> \u2192 <b>Fine-grained tokens</b>.</li>"+
+    "<li><b>Generate new token</b>. Name it \u201cGordon Hotel site\u201d. Pick an expiry.</li>"+
+    "<li><b>Repository access</b> \u2192 <b>Only select repositories</b> \u2192 choose <b>Gordon-Hotel-Website</b>.</li>"+
+    "<li><b>Permissions</b> \u2192 <b>Repository permissions</b> \u2192 <b>Contents</b> \u2192 <b>Read and write</b>.</li>"+
+    "<li><b>Generate token</b>, copy it, and paste it into the GitHub token box above.</li>"+
+    "</ol>"+
+    "<p>Open this page at <b>https://"+(settings.owner||"USERNAME")+".github.io/"+(settings.repo||"REPO")+"/admin.html</b> to edit and publish. <a href=\"https://github.com/settings/tokens?type=beta\" target=\"_blank\" rel=\"noopener\">Open token settings &rarr;</a></p>";
+
+  function renderPublish(p){
+    p.appendChild(el("div",{class:"warn"},"Publishing uses a GitHub token that can write to this one repository. It is stored only in your browser, never shared. Prefer not to use a token? Use the Download buttons and upload the two files to GitHub yourself."));
+    var tokenInput=el("input",{type:"password",value:getToken(),placeholder:"github_pat_\u2026"});
+    var remember=el("input",{type:"checkbox",checked:!!localStorage.getItem("gh_token")});
+    tokenInput.addEventListener("input",function(){setToken(tokenInput.value.trim(),remember.checked);});
+    remember.addEventListener("change",function(){setToken(tokenInput.value.trim(),remember.checked);});
+    p.appendChild(el("div",{class:"card"},[
+      el("h3",null,"Connect to GitHub"),
+      el("div",{class:"grid2"},[settingField("Owner (GitHub username)",settings,"owner"),settingField("Repository name",settings,"repo"),settingField("Branch",settings,"branch")]),
+      el("label",{class:"field"},[el("span",null,"GitHub token"),tokenInput,el("div",{style:"margin-top:6px"},[el("label",{class:"pill"},[remember,"Remember on this device (less secure)"])])]),
+      el("div",{class:"row-tools"},[
+        el("button",{class:"btn btn-gold",id:"btnPublish",onclick:publish},"Publish to website"),
+        el("button",{class:"btn btn-ghost",onclick:preview},"Preview"),
+        el("button",{class:"btn btn-ghost",onclick:function(){if(state.data)download("index.html",generate(),"text/html");}},"Download index.html"),
+        el("button",{class:"btn btn-ghost",onclick:function(){if(state.data)download("content.json",JSON.stringify(state.data,null,2),"application/json");}},"Download content.json"),
+        el("button",{class:"btn btn-ghost",onclick:function(){clearToken();log("Token cleared.");render();}},"Clear token")
+      ])
+    ]));
+    p.appendChild(el("div",{class:"card"},[el("h3",null,"How to get a token (one-time)"),el("div",{class:"hint",html:HELP_HTML})]));
+    p.appendChild(el("div",{class:"card"},[el("h3",null,"Drafts"),el("p",{class:"hint"},"Your edits auto-save in this browser until you publish."),el("div",{class:"row-tools"},[el("button",{class:"btn btn-ghost",onclick:reloadPublished},"Discard draft & reload published")])]));
+    p.appendChild(el("div",{class:"card"},[el("h3",null,"Activity"),el("div",{class:"log",id:"log"})]));
+    renderLog($("log"));
+  }
+
+  /* ---------- load ---------- */
+  function loadContent(forceFresh){
+    var draft=null;try{draft=JSON.parse(localStorage.getItem(DRAFT_KEY));}catch(e){}
+    fetch("content.json",{cache:"no-store"}).then(function(r){if(!r.ok)throw new Error("no json");return r.json();}).then(function(json){
+      if(draft&&!forceFresh){state.data=draft;render();markDirty();log("Loaded your saved draft (not yet published).");}
+      else{state.data=json;render();markClean("up to date");}
+    }).catch(function(){
+      if(draft){state.data=draft;render();markDirty();}
+      else{state.data=null;render();}
+    });
+  }
+
+  function init(){
+    loadSettings();
+    $("btnPreview").addEventListener("click",preview);
+    $("btnPublishTop").addEventListener("click",function(){if(!state.data){alert("Nothing to publish yet.");return;}if(getToken())publish();else{state.section="publish";render();}});
+    window.addEventListener("beforeunload",function(e){if(state.dirty){e.preventDefault();e.returnValue="";}});
+    render();
+    loadContent(false);
+  }
+  init();
+})();
+</script>
+</body>
+</html>

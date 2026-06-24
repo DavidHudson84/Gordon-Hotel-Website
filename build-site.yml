@@ -1,0 +1,50 @@
+name: Build site
+
+# Rebuilds index.html from content.json automatically whenever the
+# content (or the generator) changes, then commits it so GitHub Pages
+# publishes the update. This is the GitHub-native equivalent of a
+# "deploy on push" pipeline — no external service required.
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - 'content.json'
+      - 'site-generate.js'
+      - '.github/workflows/build-site.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: build-site
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Rebuild index.html from content.json
+        run: |
+          node -e "const fs=require('fs');const gen=require('./site-generate.js');const c=JSON.parse(fs.readFileSync('content.json','utf8'));fs.writeFileSync('index.html',gen.buildIndexHtml(c));console.log('Rebuilt index.html');"
+
+      - name: Commit changes (if any)
+        run: |
+          if [ -n "$(git status --porcelain index.html)" ]; then
+            git config user.name "github-actions[bot]"
+            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+            git add index.html
+            git commit -m "Auto-rebuild site from content.json [skip ci]"
+            git push
+          else
+            echo "index.html already up to date — nothing to publish."
+          fi

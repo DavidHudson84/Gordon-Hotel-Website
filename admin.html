@@ -174,7 +174,7 @@
   }
 
   /* ---------- sections ---------- */
-  var SECTIONS=[["contact","Business & text"],["specials","Specials"],["menu","Menu"],["hours","Hours"],["publish","Publish"]];
+  var SECTIONS=[["contact","Business & text"],["specials","Specials"],["menu","Menu"],["hours","Hours"],["connect","Contact & reviews"],["publish","Publish"]];
   function renderNav(){
     var nav=$("nav");nav.innerHTML="";
     SECTIONS.forEach(function(s){nav.appendChild(el("button",{class:state.section===s[0]?"active":"",onclick:function(){state.section=s[0];render();}},s[1]));});
@@ -183,7 +183,7 @@
     renderNav();
     var p=$("panel");p.innerHTML="";
     if(!state.data){p.appendChild(noDataCard());return;}
-    ({contact:renderContact,specials:renderSpecials,menu:renderMenu,hours:renderHours,publish:renderPublish}[state.section]||renderContact)(p);
+    ({contact:renderContact,specials:renderSpecials,menu:renderMenu,hours:renderHours,connect:renderConnect,publish:renderPublish}[state.section]||renderContact)(p);
   }
   function noDataCard(){
     var inp=el("input",{type:"file",accept:".json,application/json"});
@@ -410,6 +410,30 @@
     "<li><b>Generate token</b>, copy it, and paste it into the GitHub token box above.</li>"+
     "</ol>"+
     "<p>Open this page at <b>https://"+(settings.owner||"USERNAME")+".github.io/"+(settings.repo||"REPO")+"/admin.html</b> to edit and publish. <a href=\"https://github.com/settings/tokens?type=beta\" target=\"_blank\" rel=\"noopener\">Open token settings &rarr;</a></p>";
+
+  function renderConnect(p){
+    var d=state.data;
+    d.contactForm=d.contactForm||{enabled:true,heading:"Send us a message",intro:"",web3formsKey:"",successMessage:""};
+    d.reviews=d.reviews||{enabled:true,heading:"What people say",intro:"",googleReviewUrl:"",sociablekitId:""};
+    var cf=d.contactForm,rv=d.reviews;
+    p.appendChild(el("div",{class:"card"},[
+      el("h3",null,"Contact form"),
+      el("p",{class:"hint",html:"Messages land in your inbox via Web3Forms (free, no dashboard to manage). Create a key using your pub email at <a href='https://web3forms.com' target='_blank' rel='noopener'>web3forms.com</a>, paste it below, and on-site sending switches on. Until then the form opens the visitor's email app pre-filled, so it still works."}),
+      el("div",{style:"margin-bottom:12px"},[checkbox("Show the contact form on the site",cf,"enabled")]),
+      el("div",{class:"grid2"},[field("Heading",cf,"heading"),field("Web3Forms access key",cf,"web3formsKey")]),
+      field("Intro",cf,"intro",{area:true}),
+      field("Thank-you message (shown after sending)",cf,"successMessage")
+    ]));
+    p.appendChild(el("div",{class:"card"},[
+      el("h3",null,"Google reviews"),
+      el("p",{class:"hint",html:"Show a live wall of your Google reviews with <a href='https://www.sociablekit.com' target='_blank' rel='noopener'>SociableKit</a> (free). Make a \"Google Reviews\" widget, connect the pub's listing, then paste the embed ID (the number in their embed code). It updates itself \u2014 new reviews show up automatically, no work for you."}),
+      el("div",{style:"margin-bottom:12px"},[checkbox("Show the reviews section on the site",rv,"enabled")]),
+      el("div",{class:"grid2"},[field("Heading",rv,"heading"),field("SociableKit embed ID (numbers only)",rv,"sociablekitId")]),
+      field("Intro",rv,"intro",{area:true}),
+      field("Google review link (your 'write a review' URL)",rv,"googleReviewUrl",{placeholder:"https://g.page/r/\u2026/review"}),
+      el("p",{class:"hint",html:"Getting the review link: in your Google Business Profile choose <b>Ask for reviews</b> and copy the short link. Leave it blank and the button simply opens the pub on Google Maps."})
+    ]));
+  }
 
   function renderPublish(p){
     p.appendChild(el("div",{class:"warn"},"Publishing uses a GitHub token that can write to this one repository. It is stored only in your browser, never shared. Prefer not to use a token? Use the Download buttons and upload the two files to GitHub yourself."));

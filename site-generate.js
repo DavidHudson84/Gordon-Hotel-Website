@@ -170,6 +170,27 @@
   .foot-bottom{margin-top:46px;padding-top:24px;border-top:1px solid var(--line);display:flex;flex-wrap:wrap;gap:.6rem 1.5rem;justify-content:space-between;font-size:.8rem;color:#6f6857;letter-spacing:.02em;}
   .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease;}
   .reveal.in{opacity:1;transform:none;}
+  .reviews-band .reviews-cta{display:flex;flex-wrap:wrap;align-items:center;gap:.9em;margin-bottom:30px;}
+  .reviews-cta .stars{color:var(--gold-bright);letter-spacing:3px;font-size:1.05rem;}
+  .reviews-cta .muted-line{color:var(--muted);font-size:.9rem;}
+  .sk-widget{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:var(--bg-3);}
+  .sk-widget iframe{width:100%;height:560px;border:0;display:block;}
+  .contact-form{max-width:760px;}
+  .form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media(max-width:640px){.form-grid{grid-template-columns:1fr;}}
+  .form-field{display:flex;flex-direction:column;gap:6px;}
+  .form-field.full{grid-column:1/-1;}
+  .form-field label{font-family:var(--body);font-weight:600;text-transform:uppercase;letter-spacing:.12em;font-size:.66rem;color:var(--gold);}
+  .form-field input,.form-field textarea{font-family:var(--body);font-size:1rem;color:var(--text);background:var(--bg-3);border:1px solid var(--line);border-radius:6px;padding:.8em .9em;transition:border-color .18s;}
+  .form-field input:focus,.form-field textarea:focus{outline:none;border-color:var(--gold);}
+  .form-field textarea{min-height:130px;resize:vertical;}
+  .hp{position:absolute!important;left:-9999px!important;width:1px;height:1px;opacity:0;}
+  .contact-actions{margin-top:18px;}
+  .form-status{margin-top:12px;font-size:.96rem;min-height:1.2em;color:var(--muted);}
+  .form-status.ok{color:#7BD17F;}
+  .form-status.err{color:#E08B6A;}
+  .contact-alt{margin-top:18px;color:var(--muted);font-size:.95rem;}
+  .contact-alt a{color:var(--gold-bright);text-decoration:none;border-bottom:1px solid var(--line-strong);}
   @media(prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important;}.reveal{opacity:1;transform:none;transition:none;}.btn:hover,.promo:hover{transform:none;}}
   `;
 
@@ -273,7 +294,43 @@
       "lbClose.addEventListener('click',closeLb);lb.addEventListener('click',function(e){if(e.target===lb)closeLb();});document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!lb.hidden)closeLb();});" +
       "var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;var reveals=document.querySelectorAll('.reveal');" +
       "if(reduce||!('IntersectionObserver'in window)){reveals.forEach(function(el){el.classList.add('in');});}else{var io=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});reveals.forEach(function(el){io.observe(el);});}" +
+      "var cf=document.getElementById('contactForm');if(cf){cf.addEventListener('submit',function(e){e.preventDefault();var st=cf.querySelector('.form-status');var keyI=cf.querySelector('input[name=access_key]');var key=keyI&&keyI.value?keyI.value:'';var fd=new FormData(cf);if(fd.get('botcheck')){return;}st.className='form-status';st.textContent='Sending\\u2026';if(key){fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Accept':'application/json'},body:fd}).then(function(r){return r.json();}).then(function(j){if(j.success){cf.reset();st.className='form-status ok';st.textContent=cf.getAttribute('data-ok')||'Thanks, we will be in touch.';}else{st.className='form-status err';st.textContent=j.message||'Something went wrong, please call us.';}}).catch(function(){st.className='form-status err';st.textContent='Could not send, please call or email us directly.';});}else{var to=cf.getAttribute('data-email')||'';var b='Name: '+(fd.get('name')||'')+'\\nEmail: '+(fd.get('email')||'')+'\\nPhone: '+(fd.get('phone')||'')+'\\n\\n'+(fd.get('message')||'');window.location.href='mailto:'+to+'?subject='+encodeURIComponent('Website enquiry')+'&body='+encodeURIComponent(b);st.className='form-status';st.textContent='Opening your email app\\u2026';}});}" +
       "})();";
+
+    var rv = content.reviews || {};
+    var cfm = content.contactForm || {};
+    var reviewUrl = rv.googleReviewUrl ? rv.googleReviewUrl : ("https://www.google.com/maps/search/?api=1&query=" + enc(addr));
+    var skId = rv.sociablekitId ? String(rv.sociablekitId).replace(/[^0-9]/g, "") : "";
+    var reviewsHtml = (rv.enabled === false) ? "" : (
+      '<section class="band reviews-band" id="reviews"><div class="wrap"><div class="band-head reveal"><div class="gold-rule"></div>' +
+      '<span class="eyebrow">Reviews</span><h2 class="section-title">' + esc(rv.heading || "What people say") + "</h2>" +
+      (rv.intro ? "<p>" + esc(rv.intro) + "</p>" : "") + "</div>" +
+      '<div class="reviews-cta reveal"><a class="btn btn-gold" href="' + attr(reviewUrl) + '" target="_blank" rel="noopener">Leave a Google review</a>' +
+      '<span class="stars" aria-hidden="true">\u2605\u2605\u2605\u2605\u2605</span><span class="muted-line">on Google</span></div>' +
+      (skId ? '<div class="sk-widget reveal"><iframe title="Google reviews for ' + attr(c.name) + '" src="https://widgets.sociablekit.com/google-reviews/iframe/' + attr(skId) + '" frameborder="0" loading="lazy" scrolling="no"></iframe></div>' : "") +
+      "</div></section>\n"
+    );
+    var contactHtml = (cfm.enabled === false) ? "" : (
+      '<section class="band alt contact-band" id="contact"><div class="wrap"><div class="band-head reveal"><div class="gold-rule"></div>' +
+      '<span class="eyebrow">Get In Touch</span><h2 class="section-title">' + esc(cfm.heading || "Send us a message") + "</h2>" +
+      (cfm.intro ? "<p>" + esc(cfm.intro) + "</p>" : "") + "</div>" +
+      '<form class="contact-form reveal" id="contactForm" data-email="' + attr(c.email) + '" data-ok="' + attr(cfm.successMessage || "Thanks for your message.") + '">' +
+      (cfm.web3formsKey ? '<input type="hidden" name="access_key" value="' + attr(cfm.web3formsKey) + '">' : "") +
+      '<input type="hidden" name="subject" value="New enquiry from the ' + attr(c.name) + ' website">' +
+      '<input type="hidden" name="from_name" value="' + attr(c.name) + ' website">' +
+      '<div class="form-grid">' +
+      '<div class="form-field"><label for="cf-name">Name</label><input id="cf-name" type="text" name="name" autocomplete="name" required></div>' +
+      '<div class="form-field"><label for="cf-email">Email</label><input id="cf-email" type="email" name="email" autocomplete="email" required></div>' +
+      '<div class="form-field full"><label for="cf-phone">Phone (optional)</label><input id="cf-phone" type="text" name="phone" autocomplete="tel"></div>' +
+      '<div class="form-field full"><label for="cf-msg">Message</label><textarea id="cf-msg" name="message" required></textarea></div>' +
+      "</div>" +
+      '<input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">' +
+      '<div class="contact-actions"><button class="btn btn-gold" type="submit">Send message</button></div>' +
+      '<div class="form-status" role="status" aria-live="polite"></div>' +
+      "</form>" +
+      '<p class="contact-alt">Prefer to call? <a href="tel:' + attr(telHref) + '">' + esc(c.telDisplay) + '</a> \u00b7 <a href="mailto:' + attr(c.email) + '">' + esc(c.email) + "</a></p>" +
+      "</div></section>\n"
+    );
 
     return '<!DOCTYPE html>\n<html lang="en-AU">\n<head>\n' +
       '<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n' +
@@ -290,7 +347,7 @@
       '<a href="#main" class="skip">Skip to content</a>\n' +
       '<header class="site" id="top"><div class="wrap nav">' +
       '<a href="#top" class="brand" aria-label="' + attr(c.name) + ', home"><img src="logo-gold.png" alt="' + attr(c.name) + '"></a>' +
-      '<nav class="nav-links" aria-label="Primary"><a href="#whats-on">What\'s On</a><a href="#menu">Menu</a><a href="#visit">Hours &amp; Find Us</a></nav>' +
+      '<nav class="nav-links" aria-label="Primary"><a href="#whats-on">What\'s On</a><a href="#menu">Menu</a><a href="#visit">Hours &amp; Find Us</a><a href="#reviews">Reviews</a><a href="#contact">Contact</a></nav>' +
       '<div class="nav-actions"><a class="btn btn-ghost menu-only" href="#menu" data-menu>View Menu</a><a class="btn btn-gold" href="tel:' + attr(telHref) + '">Order Now</a></div>' +
       "</div></header>\n<main id=\"main\">\n" +
       '<section class="hero" aria-labelledby="hero-title"><div class="hero-inner">' +
@@ -322,7 +379,7 @@
       '<p><span class="label">Email</span><a href="mailto:' + attr(c.email) + '">' + esc(c.email) + "</a></p>" +
       '<div class="map"><iframe title="Map showing ' + attr(c.name) + " at " + attr(addr) + '" src="' + mapEmbed + '" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe></div>' +
       '<div class="visit-cta"><a class="btn btn-gold" href="' + mapDir + '" target="_blank" rel="noopener">Get Directions</a><a class="btn btn-ghost" href="tel:' + attr(telHref) + '">Call to Book</a></div>' +
-      "</div></div></div></section>\n</main>\n" +
+      "</div></div></div></section>\n" + reviewsHtml + contactHtml + "</main>\n" +
       '<footer class="site"><div class="wrap"><div class="foot-top">' +
       '<div class="foot-brand"><img src="logo-white.png" alt="' + attr(c.name) + '"><p>A quaint country pub with old-fashioned hospitality. Cold beer, hearty meals and a warm welcome \u2014 every day of the week.</p></div>' +
       '<div class="foot-col"><h4>Visit</h4><a href="' + mapSearch + '" target="_blank" rel="noopener">' + esc(c.addressShort || addr) + "</a>" +

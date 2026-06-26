@@ -62,7 +62,7 @@
     "enabled": true,
     "heading": "Send us a message",
     "intro": "Booking, function enquiry, or just a question? Drop us a line and we'll get back to you.",
-    "web3formsKey": "",
+    "web3formsKey": "ae523386-b698-428a-9265-8c3bcaf61a27",
     "successMessage": "Thanks for your message — we'll be in touch shortly."
   },
   "hoursData": {

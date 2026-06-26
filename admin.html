@@ -64,6 +64,7 @@
   <span class="spacer"></span>
   <button class="btn btn-ghost" id="btnPreview">Preview</button>
   <button class="btn btn-gold" id="btnPublishTop">Publish</button>
+  <button class="btn btn-ghost" id="btnLogout" title="Log out of the editor">Log out</button>
 </div>
 <div class="wrap">
   <div class="nav" id="nav"></div>
@@ -77,6 +78,14 @@
   var DRAFT_KEY="gordon_admin_draft_v1";
   var SET_KEY="gordon_admin_settings_v1";
   var state={data:null,dirty:false,section:"contact"};
+
+  // ====== Editor login ======
+  // Username + password for this editor. The password is stored as a
+  // SHA-256 hash, never in plain text. Default password is "gordon3345" —
+  // change it: on the login screen click "Set / change password", follow
+  // the steps, and paste the new line in place of the one below.
+  var AUTH = { user: "admin", hash: "12f151c289e636bf9c54685e6bc17067d63fb52734572e48484bc104360ba1d9" };
+  var AUTH_KEY = "gordon_admin_auth_v1";
   function $(id){return document.getElementById(id);}
 
   function el(tag,attrs,kids){
@@ -198,7 +207,8 @@
         field("Business name",c,"name"),field("Phone (shown)",c,"telDisplay"),
         field("Phone to dial (digits, e.g. +61353689203)",c,"telHref"),field("Email",c,"email"),
         field("Address (full)",c,"address"),field("Address (short, footer)",c,"addressShort"),
-        field("Facebook URL",c,"facebook")
+        field("Facebook URL",c,"facebook"),
+        field("Website address (for link previews, e.g. https://gordonhotel3345.com.au)",d,"siteUrl")
       ])]));
     p.appendChild(el("div",{class:"card"},[el("h3",null,"Front page text"),
       el("div",{class:"grid2"},[field("Eyebrow (line above logo)",h,"eyebrow"),field("Hero note (under buttons)",h,"note"),
@@ -479,7 +489,71 @@
     render();
     loadContent(false);
   }
-  init();
+  function isAuthed(){ return sessionStorage.getItem(AUTH_KEY)==="1" || localStorage.getItem(AUTH_KEY)==="1"; }
+  function setAuthed(remember){ try{ (remember?localStorage:sessionStorage).setItem(AUTH_KEY,"1"); }catch(e){} }
+  function logout(){ try{ sessionStorage.removeItem(AUTH_KEY); localStorage.removeItem(AUTH_KEY); }catch(e){} location.reload(); }
+  function sha256hex(str){
+    if(!(window.crypto&&window.crypto.subtle)) return Promise.reject(new Error("This browser can't hash here \u2014 open the editor on your live https site."));
+    return crypto.subtle.digest("SHA-256", new TextEncoder().encode(str)).then(function(buf){
+      return Array.prototype.map.call(new Uint8Array(buf), function(b){ return ("0"+b.toString(16)).slice(-2); }).join("");
+    });
+  }
+  function labelWrap(text,input){ return el("label",{class:"field"},[el("span",null,text),input]); }
+  function startApp(){ init(); var lo=$("btnLogout"); if(lo) lo.addEventListener("click",logout); }
+  function showLogin(){
+    var u=el("input",{type:"text",placeholder:"Username",autocomplete:"username"});
+    var pw=el("input",{type:"password",placeholder:"Password",autocomplete:"current-password"});
+    var rem=el("input",{type:"checkbox"});
+    var st=el("div",{class:"form-status",style:"min-height:1.2em;margin-top:6px;"});
+    function status(m,c){ st.className="form-status"+(c?" "+c:""); st.textContent=m||""; }
+    var ov=el("div",{id:"loginOverlay",style:"position:fixed;inset:0;z-index:1000;background:#0d0c0b;display:flex;align-items:center;justify-content:center;padding:20px;"});
+    function submit(){
+      var user=u.value.trim();
+      if(!AUTH.hash){ status("No password set yet \u2014 use \u2018Set / change password\u2019 below.","er"); return; }
+      status("Checking\u2026");
+      sha256hex(pw.value).then(function(h){
+        if(user===AUTH.user && h===AUTH.hash){ ov.remove(); document.body.style.overflow=""; setAuthed(rem.checked); startApp(); }
+        else status("Wrong username or password.","er");
+      }).catch(function(e){ status(e.message,"er"); });
+    }
+    u.addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); pw.focus(); } });
+    pw.addEventListener("keydown",function(e){ if(e.key==="Enter"){ e.preventDefault(); submit(); } });
+
+    var su=el("input",{type:"text",placeholder:"New username",value:AUTH.user||"admin"});
+    var sp=el("input",{type:"password",placeholder:"New password"});
+    var out=el("textarea",{rows:3,readonly:"readonly",style:"margin-top:10px;display:none;font-family:ui-monospace,Menlo,monospace;font-size:.78rem;"});
+    var note=el("div",{class:"hint",style:"display:none;margin-top:6px;"});
+    var genBtn=el("button",{class:"btn btn-ghost",style:"width:100%;margin-top:8px;",onclick:function(){
+      var user=(su.value.trim()||"admin").replace(/"/g,"");
+      if(!sp.value){ note.style.display="block"; note.textContent="Type a new password first."; return; }
+      sha256hex(sp.value).then(function(h){
+        out.value='  var AUTH = { user: "'+user+'", hash: "'+h+'" };';
+        out.style.display="block"; out.focus(); out.select();
+        note.style.display="block";
+        note.innerHTML="Copy the line above, then in <b>admin.html</b> replace the line that starts with <b>var AUTH =</b> with it, and redeploy. The new login works next time the page loads.";
+      }).catch(function(e){ note.style.display="block"; note.textContent=e.message; });
+    }},"Generate the new login line");
+    var setupWrap=el("div",{style:"display:none;margin-top:16px;border-top:1px solid var(--line);padding-top:14px;"},[
+      el("div",{class:"hint"},"Set a username and password and generate a line to paste into admin.html. The password becomes a SHA-256 hash \u2014 the plain text is never stored."),
+      labelWrap("Username",su), labelWrap("Password",sp), genBtn, out, note
+    ]);
+    var toggle=el("a",{href:"#",style:"display:inline-block;margin-top:14px;font-size:.85rem;",onclick:function(e){ e.preventDefault(); setupWrap.style.display=(setupWrap.style.display==="none"?"block":"none"); }},"Set / change password");
+
+    var card=el("div",{class:"card",style:"max-width:380px;width:100%;margin:0;"},[
+      el("h3",{style:"color:var(--goldb);margin-bottom:2px;"},"Gordon Hotel \u00b7 Editor"),
+      el("p",{class:"hint"},"Please log in to edit the site."),
+      labelWrap("Username",u), labelWrap("Password",pw),
+      el("label",{class:"pill",style:"margin-top:2px;"},[rem,"Stay logged in on this device"]),
+      el("button",{class:"btn btn-gold",style:"width:100%;margin-top:10px;",onclick:submit},"Log in"),
+      st, toggle, setupWrap
+    ]);
+    ov.appendChild(card);
+    document.body.appendChild(ov);
+    document.body.style.overflow="hidden";
+    setTimeout(function(){ u.focus(); },50);
+  }
+  function boot(){ if(isAuthed()) startApp(); else showLogin(); }
+  boot();
 })();
 </script>
 </body>

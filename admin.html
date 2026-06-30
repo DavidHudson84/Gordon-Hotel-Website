@@ -443,6 +443,11 @@
       field("Google review link (your 'write a review' URL)",rv,"googleReviewUrl",{placeholder:"https://g.page/r/\u2026/review"}),
       el("p",{class:"hint",html:"Getting the review link: in your Google Business Profile choose <b>Ask for reviews</b> and copy the short link. Leave it blank and the button simply opens the pub on Google Maps."})
     ]));
+    p.appendChild(el("div",{class:"card"},[
+      el("h3",null,"Google Analytics"),
+      el("p",{class:"hint",html:"See how many people visit the site. Create a free property at <a href='https://analytics.google.com' target='_blank' rel='noopener'>analytics.google.com</a>, copy its Measurement ID (looks like <b>G-XXXXXXXXXX</b>) and paste it below. Leave blank for no tracking."}),
+      field("Measurement ID",d,"analyticsId",{placeholder:"G-XXXXXXXXXX"})
+    ]));
   }
 
   function renderPublish(p){

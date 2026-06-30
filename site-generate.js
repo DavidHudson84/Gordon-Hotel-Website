@@ -191,6 +191,23 @@
   .form-status.err{color:#E08B6A;}
   .contact-alt{margin-top:18px;color:var(--muted);font-size:.95rem;}
   .contact-alt a{color:var(--gold-bright);text-decoration:none;border-bottom:1px solid var(--line-strong);}
+  .foot-social{display:flex;flex-wrap:wrap;gap:12px;margin-top:18px;}
+  .social-link{display:inline-flex;align-items:center;gap:.55em;color:var(--gold);text-decoration:none;font-size:.88rem;font-weight:500;border:1px solid var(--line-strong);border-radius:999px;padding:.5em .95em;transition:color .18s,border-color .18s,background .18s;}
+  .social-link:hover{color:var(--gold-bright);border-color:var(--gold);background:rgba(201,162,76,.07);}
+  .social-link svg{width:18px;height:18px;}
+  .cookie-bar{position:fixed;left:0;right:0;bottom:0;z-index:150;display:flex;flex-wrap:wrap;align-items:center;gap:14px;justify-content:center;padding:13px 20px;background:rgba(8,8,7,.97);border-top:1px solid var(--line-strong);backdrop-filter:blur(8px);}
+  .cookie-bar[hidden]{display:none;}
+  .cookie-bar p{margin:0;color:var(--muted);font-size:.9rem;}
+  .cookie-bar a{color:var(--gold-bright);}
+  .cookie-bar .btn{padding:.55em 1.2em;font-size:.78rem;}
+  .legal{max-width:760px;margin:0 auto;padding:120px 24px 80px;}
+  .legal h1{font-family:var(--display);text-transform:uppercase;letter-spacing:.04em;font-size:clamp(1.6rem,4vw,2.3rem);color:var(--text);margin-bottom:.3rem;}
+  .legal .lede{color:var(--text);font-size:1.08rem;margin-top:.4rem;}
+  .legal h2{font-family:var(--display);text-transform:uppercase;letter-spacing:.03em;font-size:1.02rem;color:var(--gold);margin:2.2rem 0 .6rem;}
+  .legal p,.legal li{color:var(--muted);font-size:1rem;line-height:1.7;}
+  .legal a{color:var(--gold-bright);}
+  .legal ul{padding-left:1.2em;margin:.4rem 0;}
+  .legal .back{display:inline-block;margin-top:2.6rem;color:var(--gold);text-decoration:none;border-bottom:1px solid var(--line-strong);padding-bottom:2px;}
   @media(prefers-reduced-motion:reduce){*{animation:none!important;scroll-behavior:auto!important;}.reveal{opacity:1;transform:none;transition:none;}.btn:hover,.promo:hover{transform:none;}}
   `;
 
@@ -202,6 +219,22 @@
     var mapSearch = "https://www.google.com/maps/search/?api=1&amp;query=" + enc(addr);
     var mapDir = "https://www.google.com/maps/dir/?api=1&amp;destination=" + enc(addr);
     var mapEmbed = "https://www.google.com/maps?q=" + enc(addr) + "&output=embed";
+    var siteUrl = (content.siteUrl || "").replace(/\/+$/, "");
+    var ogImg = (content.ogImage || "og-image.jpg").replace(/^\/+/, "");
+    var ogImageUrl = siteUrl ? (siteUrl + "/" + ogImg) : ogImg;
+
+    var gaId = (content.analyticsId || "").replace(/[^A-Za-z0-9\-]/g, "");
+    var ga = gaId ? (
+      '<scr' + 'ipt async src="https://www.googletagmanager.com/gtag/js?id=' + gaId + '"></scr' + 'ipt>\n' +
+      '<scr' + 'ipt>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag("js",new Date());gtag("config","' + gaId + '");</scr' + 'ipt>\n'
+    ) : "";
+
+    var fbUrl = c.facebook || "";
+    var FB_SVG = '<svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="currentColor"><path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07c0 6.03 4.39 11.03 10.13 11.93v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.95.93-1.95 1.88v2.26h3.32l-.53 3.49h-2.79V24C19.61 23.1 24 18.1 24 12.07z"/></svg>';
+    var fbSocial = fbUrl ? ('<div class="foot-social"><a class="social-link" href="' + attr(fbUrl) + '" target="_blank" rel="noopener" aria-label="' + attr(c.name) + ' on Facebook">' + FB_SVG + 'Find us on Facebook</a></div>') : "";
+    var fbBtn = fbUrl ? (' <a class="btn btn-ghost" href="' + attr(fbUrl) + '" target="_blank" rel="noopener">Message us on Facebook</a>') : "";
+    var fbAlt = fbUrl ? (' \u00b7 <a href="' + attr(fbUrl) + '" target="_blank" rel="noopener">Facebook</a>') : "";
+    var cookieBar = gaId ? ('<div class="cookie-bar" id="cookie-bar" hidden><p>We use cookies for basic analytics to understand how the site is used. <a href="privacy.html">Privacy &amp; cookies</a></p><button class="btn btn-gold" id="cookie-ok" type="button">Got it</button></div>\n') : "";
 
     function tagsHtml(tags) {
       return (tags || []).map(function (t) { return ' <span class="tag">' + esc(t) + "</span>"; }).join("");
@@ -270,6 +303,9 @@
 
     var SCRIPT =
       '(function(){"use strict";' +
+      "function track(n,p){try{if(typeof gtag==='function')gtag('event',n,p||{});}catch(e){}}" +
+      "function evLoc(t){if(!t||!t.closest)return'other';return (t.closest('header.site')&&'header')||(t.closest('.hero')&&'hero')||(t.closest('#whats-on')&&'whats_on')||(t.closest('#reviews')&&'reviews')||(t.closest('#visit')&&'visit')||(t.closest('#contact')&&'contact')||(t.closest('footer.site')&&'footer')||'other';}" +
+      "document.addEventListener('click',function(e){var a=e.target&&e.target.closest?e.target.closest('a'):null;if(!a)return;var href=a.getAttribute('href')||'';var loc=evLoc(a);if(href.indexOf('tel:')===0){var tx=(a.textContent||'').toLowerCase();var pev=tx.indexOf('order')>-1?'order_now_click':(tx.indexOf('book')>-1?'book_table_click':'phone_call_click');track(pev,{link_location:loc,label:(a.textContent||'').trim()});}else if(a.closest('.reviews-cta')){track('review_click',{link_location:loc});}else if(href.indexOf('facebook.com')>-1){track('facebook_click',{link_location:loc});}else if(href.indexOf('google.com/maps')>-1){track('get_directions',{link_location:loc});}else if(a.hasAttribute('data-menu')){track('view_menu',{link_location:loc});}},true);" +
       'var HOURS=' + JSON.stringify(content.hoursData || {}) + ';' +
       "var DAY_NAMES=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];" +
       "function fmt(t){if(t>=24)return'midnight';var h=Math.floor(t),m=Math.round((t-h)*60),ap=h>=12?'pm':'am',h12=h%12;if(h12===0)h12=12;return m?(h12+':'+(m<10?'0'+m:m)+ap):(h12+ap);}" +
@@ -282,19 +318,20 @@
       "var header=document.querySelector('header.site');function onScroll(){header.classList.toggle('scrolled',window.scrollY>24);}onScroll();window.addEventListener('scroll',onScroll,{passive:true});" +
       "var tabs=Array.prototype.slice.call(document.querySelectorAll('.tab'));var panels=Array.prototype.slice.call(document.querySelectorAll('.panel'));" +
       "function activateTab(tab,focus){var target=tab.getAttribute('aria-controls');tabs.forEach(function(t){t.setAttribute('aria-selected',t===tab?'true':'false');});panels.forEach(function(p){p.hidden=(p.id!==target);if(!p.hidden)p.classList.add('in');});if(focus)tab.focus();}" +
-      "tabs.forEach(function(tab,i){tab.addEventListener('click',function(){activateTab(tab);});tab.addEventListener('keydown',function(e){var idx=i;if(e.key==='ArrowRight')idx=(i+1)%tabs.length;else if(e.key==='ArrowLeft')idx=(i-1+tabs.length)%tabs.length;else if(e.key==='Home')idx=0;else if(e.key==='End')idx=tabs.length-1;else return;e.preventDefault();activateTab(tabs[idx],true);});});" +
+      "tabs.forEach(function(tab,i){tab.addEventListener('click',function(){activateTab(tab);track('select_menu_tab',{menu_tab:tab.textContent.trim()});});tab.addEventListener('keydown',function(e){var idx=i;if(e.key==='ArrowRight')idx=(i+1)%tabs.length;else if(e.key==='ArrowLeft')idx=(i-1+tabs.length)%tabs.length;else if(e.key==='Home')idx=0;else if(e.key==='End')idx=tabs.length-1;else return;e.preventDefault();activateTab(tabs[idx],true);});});" +
       "var cur=document.querySelector('.tab[aria-selected=\"true\"]')||tabs[0];if(cur)activateTab(cur);" +
       "function tabById(id){return document.getElementById('tab-'+id.replace('panel-',''));}" +
       "document.querySelectorAll('[data-menu]').forEach(function(link){link.addEventListener('click',function(){var w=link.getAttribute('data-tab');if(w){var t=tabById(w);if(t)activateTab(t);}});});" +
-      "document.querySelectorAll('.promo').forEach(function(p){p.addEventListener('click',function(e){if(e.target.closest('a'))return;p.classList.toggle('show-bg');});});" +
+      "document.querySelectorAll('.promo').forEach(function(p){p.addEventListener('click',function(e){var hh=p.querySelector('h3');track('select_special',{special:hh?hh.textContent.trim():''});if(e.target.closest('a'))return;p.classList.toggle('show-bg');});});" +
       "var lb=document.getElementById('lightbox'),lbImg=document.getElementById('lightbox-img'),lbCap=document.getElementById('lightbox-cap'),lbClose=document.getElementById('lightbox-close'),lastFocus=null,closeTimer=null;" +
-      "function openLb(src,label){if(closeTimer){clearTimeout(closeTimer);closeTimer=null;}lbImg.src=src;lbImg.alt=label||'';lbCap.textContent=label||'';lastFocus=document.activeElement;lb.hidden=false;requestAnimationFrame(function(){lb.classList.add('open');});document.body.style.overflow='hidden';lbClose.focus();}" +
+      "function openLb(src,label){track('view_dish_photo',{dish_name:label||''});if(closeTimer){clearTimeout(closeTimer);closeTimer=null;}lbImg.src=src;lbImg.alt=label||'';lbCap.textContent=label||'';lastFocus=document.activeElement;lb.hidden=false;requestAnimationFrame(function(){lb.classList.add('open');});document.body.style.overflow='hidden';lbClose.focus();}" +
       "function closeLb(){lb.classList.remove('open');document.body.style.overflow='';closeTimer=setTimeout(function(){lb.hidden=true;lbImg.src='';},250);if(lastFocus&&lastFocus.focus)lastFocus.focus();}" +
       "document.querySelectorAll('.item.has-photo').forEach(function(it){it.addEventListener('click',function(){openLb(it.getAttribute('data-img'),it.getAttribute('data-label'));});});" +
       "lbClose.addEventListener('click',closeLb);lb.addEventListener('click',function(e){if(e.target===lb)closeLb();});document.addEventListener('keydown',function(e){if(e.key==='Escape'&&!lb.hidden)closeLb();});" +
       "var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;var reveals=document.querySelectorAll('.reveal');" +
       "if(reduce||!('IntersectionObserver'in window)){reveals.forEach(function(el){el.classList.add('in');});}else{var io=new IntersectionObserver(function(en){en.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:0.1,rootMargin:'0px 0px -40px 0px'});reveals.forEach(function(el){io.observe(el);});}" +
-      "var cf=document.getElementById('contactForm');if(cf){cf.addEventListener('submit',function(e){e.preventDefault();var st=cf.querySelector('.form-status');var keyI=cf.querySelector('input[name=access_key]');var key=keyI&&keyI.value?keyI.value:'';var fd=new FormData(cf);if(fd.get('botcheck')){return;}st.className='form-status';st.textContent='Sending\\u2026';if(key){fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Accept':'application/json'},body:fd}).then(function(r){return r.json();}).then(function(j){if(j.success){cf.reset();st.className='form-status ok';st.textContent=cf.getAttribute('data-ok')||'Thanks, we will be in touch.';}else{st.className='form-status err';st.textContent=j.message||'Something went wrong, please call us.';}}).catch(function(){st.className='form-status err';st.textContent='Could not send, please call or email us directly.';});}else{var to=cf.getAttribute('data-email')||'';var b='Name: '+(fd.get('name')||'')+'\\nEmail: '+(fd.get('email')||'')+'\\nPhone: '+(fd.get('phone')||'')+'\\n\\n'+(fd.get('message')||'');window.location.href='mailto:'+to+'?subject='+encodeURIComponent('Website enquiry')+'&body='+encodeURIComponent(b);st.className='form-status';st.textContent='Opening your email app\\u2026';}});}" +
+      "var cf=document.getElementById('contactForm');if(cf){cf.addEventListener('submit',function(e){e.preventDefault();var st=cf.querySelector('.form-status');var keyI=cf.querySelector('input[name=access_key]');var key=keyI&&keyI.value?keyI.value:'';var fd=new FormData(cf);if(fd.get('botcheck')){return;}st.className='form-status';st.textContent='Sending\\u2026';if(key){fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Accept':'application/json'},body:fd}).then(function(r){return r.json();}).then(function(j){if(j.success){cf.reset();track('generate_lead',{form_name:'contact'});st.className='form-status ok';st.textContent=cf.getAttribute('data-ok')||'Thanks, we will be in touch.';}else{st.className='form-status err';st.textContent=j.message||'Something went wrong, please call us.';}}).catch(function(){st.className='form-status err';st.textContent='Could not send, please call or email us directly.';});}else{var to=cf.getAttribute('data-email')||'';var b='Name: '+(fd.get('name')||'')+'\\nEmail: '+(fd.get('email')||'')+'\\nPhone: '+(fd.get('phone')||'')+'\\n\\n'+(fd.get('message')||'');window.location.href='mailto:'+to+'?subject='+encodeURIComponent('Website enquiry')+'&body='+encodeURIComponent(b);track('contact_email_open',{form_name:'contact'});st.className='form-status';st.textContent='Opening your email app\\u2026';}});}" +
+      "var cb=document.getElementById('cookie-bar');if(cb){try{if(!localStorage.getItem('gordon_cookie_ack'))cb.hidden=false;}catch(e){cb.hidden=false;}var ok=document.getElementById('cookie-ok');if(ok)ok.addEventListener('click',function(){try{localStorage.setItem('gordon_cookie_ack','1');}catch(e){}cb.hidden=true;});}" +
       "})();";
 
     var rv = content.reviews || {};
@@ -325,21 +362,34 @@
       '<div class="form-field full"><label for="cf-msg">Message</label><textarea id="cf-msg" name="message" required></textarea></div>' +
       "</div>" +
       '<input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">' +
-      '<div class="contact-actions"><button class="btn btn-gold" type="submit">Send message</button></div>' +
+      '<div class="contact-actions"><button class="btn btn-gold" type="submit">Send message</button>' + fbBtn + "</div>" +
       '<div class="form-status" role="status" aria-live="polite"></div>' +
       "</form>" +
-      '<p class="contact-alt">Prefer to call? <a href="tel:' + attr(telHref) + '">' + esc(c.telDisplay) + '</a> \u00b7 <a href="mailto:' + attr(c.email) + '">' + esc(c.email) + "</a></p>" +
+      '<p class="contact-alt">Prefer to call? <a href="tel:' + attr(telHref) + '">' + esc(c.telDisplay) + '</a> \u00b7 <a href="mailto:' + attr(c.email) + '">' + esc(c.email) + "</a>" + fbAlt + "</p>" +
       "</div></section>\n"
     );
 
     return '<!DOCTYPE html>\n<html lang="en-AU">\n<head>\n' +
       '<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n' +
+      ga +
       "<title>" + esc(c.name) + " \u2014 Country pub, bistro &amp; bottle shop in Gordon, VIC</title>\n" +
       '<meta name="description" content="A quaint country pub with old-fashioned hospitality. Cold beer, hearty counter meals, hot pizza and a drive-through bottle shop. Parma nights, happy hour, kids eat free and takeaway. ' + attr(addr) + '">\n' +
       '<meta name="theme-color" content="#0A0908">\n' +
       '<meta property="og:title" content="' + attr(c.name) + ' \u2014 Gordon, VIC">\n' +
       '<meta property="og:description" content="Old-fashioned country hospitality. Cold beer, hearty meals, hot pizza, a drive-through bottle shop, parma nights and happy hour.">\n' +
-      '<meta property="og:type" content="website">\n<meta property="og:image" content="logo-gold.png">\n' +
+      '<meta property="og:type" content="website">\n' +
+      (siteUrl ? '<meta property="og:url" content="' + attr(siteUrl) + '/">\n' : "") +
+      '<meta property="og:site_name" content="' + attr(c.name) + '">\n' +
+      '<meta property="og:image" content="' + attr(ogImageUrl) + '">\n' +
+      '<meta property="og:image:secure_url" content="' + attr(ogImageUrl) + '">\n' +
+      '<meta property="og:image:type" content="image/jpeg">\n' +
+      '<meta property="og:image:width" content="1200">\n' +
+      '<meta property="og:image:height" content="630">\n' +
+      '<meta property="og:image:alt" content="' + attr("A parma with chips and salad at " + c.name) + '">\n' +
+      '<meta name="twitter:card" content="summary_large_image">\n' +
+      '<meta name="twitter:title" content="' + attr(c.name + " \u2014 Gordon, VIC") + '">\n' +
+      '<meta name="twitter:description" content="Old-fashioned country hospitality. Cold beer, hearty meals, hot pizza, parma nights and happy hour.">\n' +
+      '<meta name="twitter:image" content="' + attr(ogImageUrl) + '">\n' +
       "<link rel=\"icon\" href=\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%230A0908'/%3E%3Crect x='2.5' y='2.5' width='59' height='59' rx='10' fill='none' stroke='%23C9A24C' stroke-width='2'/%3E%3Ctext x='32' y='45' font-family='Arial,sans-serif' font-size='38' font-weight='700' text-anchor='middle' fill='%23D4AC52'%3EG%3C/text%3E%3C/svg%3E\">\n" +
       '<link rel="preconnect" href="https://fonts.googleapis.com">\n<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n' +
       '<link href="https://fonts.googleapis.com/css2?family=Michroma&amp;family=Saira:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">\n' +
@@ -381,18 +431,58 @@
       '<div class="visit-cta"><a class="btn btn-gold" href="' + mapDir + '" target="_blank" rel="noopener">Get Directions</a><a class="btn btn-ghost" href="tel:' + attr(telHref) + '">Call to Book</a></div>' +
       "</div></div></div></section>\n" + reviewsHtml + contactHtml + "</main>\n" +
       '<footer class="site"><div class="wrap"><div class="foot-top">' +
-      '<div class="foot-brand"><img src="logo-white.png" alt="' + attr(c.name) + '"><p>A quaint country pub with old-fashioned hospitality. Cold beer, hearty meals and a warm welcome \u2014 every day of the week.</p></div>' +
+      '<div class="foot-brand"><img src="logo-white.png" alt="' + attr(c.name) + '"><p>A quaint country pub with old-fashioned hospitality. Cold beer, hearty meals and a warm welcome \u2014 every day of the week.</p>' + fbSocial + "</div>" +
       '<div class="foot-col"><h4>Visit</h4><a href="' + mapSearch + '" target="_blank" rel="noopener">' + esc(c.addressShort || addr) + "</a>" +
       '<a href="tel:' + attr(telHref) + '">' + esc(c.telDisplay) + "</a><a href=\"mailto:" + attr(c.email) + '">' + esc(c.email) + "</a></div>" +
-      '<div class="foot-col"><h4>Explore</h4><a href="#whats-on">What\'s On</a><a href="#menu" data-menu>Menu</a><a href="#visit">Hours</a>' +
+      '<div class="foot-col"><h4>Explore</h4><a href="#whats-on">What\'s On</a><a href="#menu" data-menu>Menu</a><a href="#visit">Hours</a><a href="privacy.html">Privacy</a>' +
       '<a href="' + attr(c.facebook) + '" target="_blank" rel="noopener">Facebook</a></div>' +
       '</div><div class="foot-bottom"><span>&copy; <span id="year">2026</span> ' + esc(c.name) + ', Gordon VIC.</span><span>Please enjoy responsibly.</span></div></div></footer>\n' +
       '<div class="lightbox" id="lightbox" hidden><button class="lightbox-close" id="lightbox-close" aria-label="Close photo">&times;</button>' +
       '<figure class="lightbox-fig" role="dialog" aria-modal="true" aria-label="Dish photo"><img id="lightbox-img" src="" alt=""><figcaption id="lightbox-cap"></figcaption></figure></div>\n' +
+      cookieBar +
       "<scr" + "ipt>" + SCRIPT + "</scr" + "ipt>\n</body>\n</html>\n";
   }
 
-  var api = { buildIndexHtml: buildIndexHtml, esc: esc };
+  function buildPrivacyHtml(content) {
+    var c = content.contact || {};
+    var telHref = c.telHref || "";
+    return '<!DOCTYPE html>\n<html lang="en-AU">\n<head>\n' +
+      '<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1">\n' +
+      '<meta name="robots" content="noindex">\n' +
+      "<title>Privacy &amp; Cookies \u2014 " + esc(c.name) + "</title>\n" +
+      '<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>' +
+      '<link href="https://fonts.googleapis.com/css2?family=Michroma&amp;family=Saira:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet">\n' +
+      "<style>" + CSS + "</style>\n</head>\n<body>\n" +
+      '<header class="site scrolled"><div class="wrap nav"><a href="index.html" class="brand" aria-label="' + attr(c.name) + ', home"><img src="logo-gold.png" alt="' + attr(c.name) + '"></a>' +
+      '<div class="nav-actions"><a class="btn btn-ghost" href="index.html">Back to site</a></div></div></header>\n' +
+      '<main class="legal">' +
+      "<h1>Privacy &amp; Cookies</h1>" +
+      '<p class="lede">This explains, in plain terms, what happens to information when you use the ' + esc(c.name) + " website.</p>" +
+      "<h2>The short version</h2>" +
+      "<p>We run a simple website for the pub. We don't sell your information, and we only collect what's needed to keep the site working, understand how it's used, and reply if you contact us.</p>" +
+      "<h2>What we collect</h2>" +
+      "<ul>" +
+      "<li><b>Usage data.</b> When you browse the site we use Google Analytics to see things like which pages are visited, roughly where visitors are (city level), and what device or browser is used. This helps us improve the site. It's collected using cookies.</li>" +
+      "<li><b>Anything you send us.</b> If you use the contact form, the name, email, phone and message you provide are emailed to us through a third-party form service so we can respond. We keep those emails only as long as needed to deal with your enquiry.</li>" +
+      "</ul>" +
+      "<h2>Cookies</h2>" +
+      "<p>Cookies are small files stored by your browser. We use them for analytics (via Google Analytics). Pages that include Google Maps or our Google reviews feed may also set their own cookies. You can block or delete cookies in your browser settings at any time \u2014 the site will still work. To opt out of Google Analytics across all sites, you can install Google's opt-out browser add-on at <a href=\"https://tools.google.com/dlpage/gaoptout\" target=\"_blank\" rel=\"noopener\">tools.google.com/dlpage/gaoptout</a>.</p>" +
+      "<h2>Who we share it with</h2>" +
+      "<p>We use a few trusted services to run the site \u2014 Google (analytics, maps and reviews) and our contact-form provider. They handle data under their own privacy policies. We don't sell or rent your information to anyone.</p>" +
+      "<h2>Your choices</h2>" +
+      "<p>You can control cookies through your browser, opt out of analytics as above, and contact us any time to ask what information we hold about you or to have it removed.</p>" +
+      "<h2>Contact us</h2>" +
+      "<p>" + esc(c.name) + ", " + esc(c.address) + ".<br>" +
+      'Phone <a href="tel:' + attr(telHref) + '">' + esc(c.telDisplay) + '</a> \u00b7 Email <a href="mailto:' + attr(c.email) + '">' + esc(c.email) + "</a></p>" +
+      "<h2>Changes</h2>" +
+      "<p>We may update this notice from time to time. The latest version will always be on this page.</p>" +
+      '<a class="back" href="index.html">\u2190 Back to ' + esc(c.name) + "</a>" +
+      "</main>\n" +
+      '<footer class="site"><div class="wrap"><div class="foot-bottom"><span>&copy; ' + esc(c.name) + ', Gordon VIC.</span><span>Please enjoy responsibly.</span></div></div></footer>\n' +
+      "</body>\n</html>\n";
+  }
+
+  var api = { buildIndexHtml: buildIndexHtml, buildPrivacyHtml: buildPrivacyHtml, esc: esc };
   if (typeof module !== "undefined" && module.exports) module.exports = api;
   root.SiteGen = api;
 })(typeof window !== "undefined" ? window : this);
